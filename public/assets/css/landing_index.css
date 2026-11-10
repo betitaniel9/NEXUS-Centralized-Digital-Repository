@@ -1,0 +1,1776 @@
+body {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Navbar */
+.navbar .brand-text {
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.navbar .nav-link {
+    font-weight: 500;
+    margin: 0 0.5rem;
+}
+
+.navbar .btn {
+    min-width: 100px;
+}
+
+a {
+    text-decoration: none;
+    color:black;
+}
+
+/* Navbar starts see-through over the hero... */
+#siteNav {
+    background: transparent;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    --bs-navbar-color: #fff;
+    --bs-navbar-hover-color: #f6b434;
+    --bs-navbar-active-color: #fff;
+}
+
+#siteNav:not(.scrolled) a {
+    color: #fff;
+}
+
+#siteNav:not(.scrolled) .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+#siteNav:not(.scrolled) .navbar-toggler-icon {
+    filter: invert(1); /* white hamburger icon */
+}
+
+/* ...and turns white once the page is scrolled */
+#siteNav.scrolled {
+    background: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --bs-navbar-color: rgba(0, 0, 0, 0.65);
+    --bs-navbar-hover-color: #0e4a66;
+    --bs-navbar-active-color: #000;
+}
+
+/* Hero background */
+.hero {
+    min-height: 100vh; /* fill the whole screen; navbar floats on top */
+    padding-top: 80px; /* keep content clear of the navbar */
+    background: url('../images/Hostel-pic.png') center / cover no-repeat;
+}
+
+
+/* Hero resource cards */
+.resource-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 440px;
+    margin-left: auto;
+    padding: 2rem 0;
+}
+
+/* Hero cards */
+.resource-card {
+    --glow: #1d5f80; /* hover glow colour, set per card below */
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.card-1 { --glow: #1d5f80; }
+.card-2 { --glow: #1f7a5a; }
+.card-3 { --glow: #6a58b8; }
+
+/* Slight tilt and offset like a loose stack */
+.card-1 { transform: rotate(-2deg); }
+.card-2 { transform: rotate(1.5deg); margin-left: 2.5rem; margin-right: -1rem; }
+.card-3 { transform: rotate(-1deg); }
+
+/* Hover: straighten, lift and glow in the card's colour */
+.resource-card:hover {
+    transform: rotate(0) translateY(-6px);
+    box-shadow:
+        0 0 0 2px color-mix(in srgb, var(--glow) 50%, transparent),
+        0 0 28px 6px color-mix(in srgb, var(--glow) 65%, transparent),
+        0 0 60px 12px color-mix(in srgb, var(--glow) 30%, transparent);
+}
+
+.resource-icon {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-blue   { background: #e3eef5; color: #1d5f80; }
+.icon-green  { background: #e0f3ec; color: #1f7a5a; }
+.icon-purple { background: #ece8f8; color: #5b4a9e; }
+
+.resource-info {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.resource-info h6 {
+    margin: 0 0 0.2rem;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #12202b;
+}
+
+.resource-info small {
+    color: #6b7680;
+}
+
+.resource-download {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #1d5f80;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resource-download:hover {
+    background: #164a64;
+    color: #fff;
+}
+
+.resource-badge {
+    flex-shrink: 0;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.badge-green  { background: #dcf1e8; color: #1f7a5a; }
+.badge-yellow { background: #fdf0c8; color: #8a6200; }
+
+/* On small screens, drop the tilt/offset so cards fit */
+@media (max-width: 991.98px) {
+    .resource-stack { margin: 0 auto; }
+    .card-1, .card-2, .card-3 { transform: none; margin-left: 0; margin-right: 0; }
+}
+
+
+/* Hero headline (left side) */
+.hero {
+    position: relative;
+    overflow: hidden;
+    background: url('../images/Hostel-pic.png') center / cover no-repeat;
+}
+
+/* See-through navy panel on the left, with a wavy "crest" right edge.
+   The SVG mask draws the shape; it stretches to fit any screen size. */
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 62%;
+    background: rgba(14, 74, 102, 0.8); /* last number = opacity */
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0 H100 C70 25 70 75 100 100 H0 Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0 H100 C70 25 70 75 100 100 H0 Z'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
+    pointer-events: none;
+}
+
+/* Keep hero content above the panel */
+.hero > .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* On small screens the text spans the full width, so cover it all */
+@media (max-width: 991.98px) {
+    .hero::before {
+        width: 100%;
+        -webkit-mask: none;
+                mask: none;
+    }
+}
+
+.hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.35rem 1rem 0.35rem 0.4rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.hero-pill-tag {
+    background: #f6b434;
+    color: #12202b;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+}
+
+.hero-title {
+    font-family: 'Monoton', sans-serif;
+    color: #fff;
+    font-weight: 200;
+    font-size: clamp(4rem, 10vw, 8rem); /* min, scales with screen, max */
+    line-height: 1;
+    letter-spacing: -1px;
+}
+/* Tagline under "CICS NEXUS" */
+.text-accent {
+    display: block;
+    margin-top: 1rem;
+    padding-left: 1rem;
+    border-left: 4px solid #f6b434; /* yellow bar on the left */
+    max-width: 32rem;
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: clamp(1.25rem, 2.2vw, 1.75rem); /* own size, not tied to the big title */
+    line-height: 1.3;
+    letter-spacing: 0;
+}
+
+/* "fellow ARASOF students." in yellow with a marker-style underline */
+
+
+/* Subtitle: content tags + trust line */
+.hero-subtitle {
+    margin-top: 1.5rem;
+    max-width: 34rem;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+}
+
+.hero-tags li {
+    padding: 0.35rem 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 500;
+    backdrop-filter: blur(4px);
+}
+
+.hero-trust {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.hero-trust svg {
+    color: #4fd1a5; /* green shield = checked */
+    flex-shrink: 0;
+}
+
+.hero-dot {
+    color: #f6b434;
+    font-weight: 700;
+}
+
+
+/* Small CICS / CICS SC logos under the pill */
+.hero-logos {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: -0.5rem 0 1.5rem; /* pull up slightly toward the pill */
+}
+
+.hero-logos img {
+    height: 48px;
+    width: auto;
+}
+
+
+/* ---------- Intro screen ---------- */
+.intro {
+    display: none; /* only shown while the intro runs */
+}
+
+html.intro-active body {
+    overflow: hidden; /* no scrolling during the intro */
+}
+
+html.intro-active .intro {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: radial-gradient(circle at center, #145a7a 0%, #0b3a50 55%, #06222f 100%);
+    cursor: pointer;
+    transition: opacity 0.8s ease; /* keep in sync with FADE_MS in intro.js */
+}
+
+.intro-gif {
+    width: min(90vw, 760px); /* GIF's own width, so it stays sharp */
+    height: auto;
+}
+
+.intro-skip {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* Fade the whole intro out to reveal the page */
+.intro.is-leaving {
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+/* ---------- What's inside section ---------- */
+.inside-section {
+    /* Polka-dot grid: one small dot where each grid line would cross */
+    --dot-color: #c3cfd9;
+    --dot-gap: 24px;
+    background-color: #f1f5f9;
+    background-image: radial-gradient(circle, var(--dot-color) 1.2px, transparent 1.8px);
+    background-size: var(--dot-gap) var(--dot-gap);
+    background-position: center top;
+    padding: 5rem 0;
+    scroll-margin-top: 70px; /* so the fixed navbar doesn't cover the heading */
+}
+
+.section-eyebrow {
+    margin: 0 0 0.5rem;
+    color: #1d5f80;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.section-title {
+    margin: 0;
+    color: #12202b;
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+.btn-outline-pill {
+    display: inline-block;
+    padding: 0.6rem 1.25rem;
+    border: 1px solid #cfd8e0;
+    border-radius: 999px;
+    background: #fff;
+    color: #12202b;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.btn-outline-pill:hover {
+    border-color: #1d5f80;
+    color: #1d5f80;
+}
+
+/* ---------- 3D folder cards ---------- */
+/* Colour themes: --tint = folder body, --ink = icon/accent colour */
+.folder-blue   { --tint: #cfe3ef; --ink: #1d5f80; --icon-bg: #e3eef5; }
+.folder-green  { --tint: #c7eadb; --ink: #1f7a5a; --icon-bg: #e0f3ec; }
+.folder-purple { --tint: #ddd5f3; --ink: #5b4a9e; --icon-bg: #ece8f8; }
+.folder-yellow { --tint: #f8e2a8; --ink: #8a6200; --icon-bg: #fdf0c8; }
+.folder-lime   { --tint: #d3e9c4; --ink: #3f7a1f; --icon-bg: #e6f2dc; }
+.folder-red    { --tint: #f6cfc9; --ink: #b0402f; --icon-bg: #fbe3df; }
+.folder-slate  { --tint: #d5dce3; --ink: #45535f; --icon-bg: #e6ebef; }
+.folder-pink   { --tint: #f3d0e0; --ink: #a03a6a; --icon-bg: #f9e4ee; }
+
+.folder {
+    position: relative;
+    display: block;
+    height: 200px;
+    perspective: 900px; /* gives the front flap its 3D tilt */
+    color: inherit;
+}
+
+/* Back of the folder, with the tab on top-left */
+.folder-back {
+    position: absolute;
+    inset: 16px 0 0 0;
+    background: var(--tint);
+    border-radius: 4px 16px 16px 16px;
+    box-shadow: 0 2px 6px rgba(18, 32, 43, 0.06);
+}
+
+.folder-back::before {
+    content: "";
+    position: absolute;
+    top: -16px;
+    left: 0;
+    width: 44%;
+    height: 18px;
+    background: var(--tint);
+    border-radius: 12px 12px 0 0;
+    clip-path: polygon(0 0, 82% 0, 100% 100%, 0 100%); /* slanted tab edge */
+}
+
+/* Papers tucked inside, peek out when the folder opens */
+.folder-paper {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    top: 26px;
+    height: 120px;
+    background:
+        repeating-linear-gradient(transparent 0 14px, #e6ebef 14px 15px) 14px 18px / calc(100% - 28px) 60px no-repeat,
+        #fff;
+    border-radius: 8px;
+    /* soft shadow + a second sheet peeking out behind (offset solid shadows) */
+    box-shadow:
+        0 2px 6px rgba(18, 32, 43, 0.08),
+        8px -5px 0 -2px #f8fafc,
+        8px -5px 0 -1px #e3e9ee;
+    transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+/* Front flap with the card content; hinges at the bottom */
+.folder-front {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 40px;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 1.1rem 1.1rem 1rem;
+    background: #fff;
+    border: 1px solid #e3e9ee;
+    border-radius: 14px;
+    box-shadow: 0 6px 14px rgba(18, 32, 43, 0.06);
+    transform-origin: 50% 100%;
+    transition: transform 0.45s ease, box-shadow 0.45s ease;
+}
+
+.folder-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--icon-bg);
+    color: var(--ink);
+}
+
+.folder-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+}
+
+.folder-title {
+    color: #12202b;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.25;
+}
+
+.folder-desc {
+    color: #5f6b76;
+    font-size: 0.85rem;
+    line-height: 1.45;
+}
+
+/* Hover / keyboard focus: flap tips forward, papers rise */
+.folder:hover .folder-front,
+.folder:focus-visible .folder-front {
+    transform: rotateX(-24deg);
+    box-shadow: 0 18px 30px rgba(18, 32, 43, 0.15);
+}
+
+.folder:hover .folder-paper,
+.folder:focus-visible .folder-paper {
+    transform: translateY(-22px);
+}
+
+.folder:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 4px;
+    border-radius: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .folder-front,
+    .folder-paper {
+        transition: none;
+    }
+}
+
+
+/* ---------- Parallax ---------- */
+/* The photo sits on its own taller layer so it can scroll slower than the page */
+.hero {
+    background: #0e4a66;
+    isolation: isolate; /* keeps the photo layer behind the navy panel */
+}
+
+.hero-bg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -20%;
+    height: 140%;
+    z-index: -1;
+    background: url('../images/Hostel-pic.png') center / cover no-repeat;
+    will-change: transform;
+}
+
+[data-parallax] {
+    will-change: transform;
+}
+
+/* ---------- Hero cards animation ---------- */
+/* Mouse parallax (set by parallax.js), eased so it feels floaty */
+.card-layer {
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Slide in from the right, then bob gently forever */
+.card-float {
+    animation:
+        card-in 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+        card-bob 6s ease-in-out infinite;
+}
+
+.card-layer:nth-child(1) .card-float { animation-delay: 0.1s, 1.0s; }
+.card-layer:nth-child(2) .card-float { animation-delay: 0.3s, 1.8s; }
+.card-layer:nth-child(3) .card-float { animation-delay: 0.5s, 2.6s; }
+
+/* Wait for the intro to finish before the cards come in */
+html.intro-active .card-float {
+    animation-play-state: paused;
+}
+
+@keyframes card-in {
+    from { opacity: 0; translate: 90px 0; }
+    to   { opacity: 1; translate: 0 0; }
+}
+
+@keyframes card-bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card-float { animation: none; }
+}
+
+
+/* ---------- Icon chaff burst on hero cards ---------- */
+.resource-card {
+    cursor: pointer;
+    user-select: none;
+}
+
+.chaff {
+    position: fixed;
+    z-index: 1500;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.25));
+}
+
+
+/* ---------- How it works ---------- */
+.how-section {
+    position: relative;
+    overflow: hidden;
+    margin-top: -4vw; /* tuck the slanted top over the section above */
+    padding: calc(4vw + 4.5rem) 0 calc(4vw + 5rem);
+    color: #fff;
+    /* same teal as the hero panel (#0e4a66), with a little depth */
+    background: linear-gradient(135deg, #0a3a50 0%, #0e4a66 50%, #12607f 100%);
+    clip-path: polygon(0 4vw, 100% 0, 100% calc(100% - 4vw), 0 100%); /* slanted edges */
+    scroll-margin-top: 40px;
+}
+
+/* Big outlined NEXUS behind everything */
+.how-watermark {
+    position: absolute;
+    top: 6%;
+    left: -1%;
+    font-family: 'Monoton', sans-serif;
+    font-size: 19vw;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.06);
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+}
+
+.how-eyebrow { color: #f6b434; }
+.how-title   { color: #fff; }
+
+/* Left side */
+.how-big-title {
+    margin: 0 0 1.5rem;
+    color: #fff;
+    font-weight: 700;
+    font-size: clamp(3rem, 5.5vw, 4.75rem);
+    line-height: 1.02;
+    letter-spacing: -1px;
+}
+
+.text-yellow { color: #f6b434; }
+
+.how-lead {
+    max-width: 26rem;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.15rem;
+    line-height: 1.6;
+}
+
+/* Pill buttons */
+.btn-pill {
+    display: inline-block;
+    padding: 0.8rem 1.6rem;
+    border-radius: 999px;
+    font-weight: 600;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-pill:hover { transform: translateY(-2px); }
+
+.btn-pill-yellow {
+    background: #f6b434;
+    color: #12202b;
+}
+.btn-pill-yellow:hover { background: #ffc451; color: #12202b; }
+
+.btn-pill-outline {
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    color: #fff;
+}
+.btn-pill-outline:hover { background: #fff; color: #0e4a66; }
+
+.btn-pill-sm {
+    padding: 0.45rem 1.25rem;
+    font-size: 0.95rem;
+}
+
+/* Right side: steps on a dashed line */
+.how-flow {
+    --circle: 76px;
+    position: relative;
+    margin: 0;
+}
+
+/* The dashed line runs through the centre of the circles */
+.how-flow::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--circle) / 2 - 1px);
+    border-left: 2px dashed rgba(255, 255, 255, 0.35);
+    transform-origin: top;
+}
+
+.how-flow-step {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 0.9rem 0;
+}
+
+.how-circle {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    width: var(--circle);
+    height: var(--circle);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    box-shadow: 0 0 0 9px #0b3a50; /* dark ring that hides the dashed line */
+}
+
+.circle-yellow { background: #f6b434; color: #12202b; }
+.circle-white  { background: #fff;    color: #0e4a66; }
+.circle-green  { background: #1f7a5a; color: #fff; }
+
+.how-card {
+    flex: 1;
+    max-width: 460px;
+    padding: 1.6rem 1.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.how-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.14);
+}
+
+/* Middle card sits further right, like the reference */
+.step-offset .how-card { margin-left: 3rem; }
+
+.how-card-title {
+    margin-bottom: 0.4rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.how-card-desc {
+    margin-bottom: 1.25rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.45;
+}
+
+/* Mini UI: search bar */
+.how-search {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1.25rem;
+    border-radius: 999px;
+    background: #fff;
+    color: #5f6b76;
+}
+
+.how-typed {
+    min-height: 1.5em;
+}
+
+/* blinking caret while typing */
+.how-typed.is-typing::after {
+    content: "";
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    margin-left: 2px;
+    vertical-align: -0.15em;
+    background: #0e4a66;
+    animation: caret-blink 0.8s step-end infinite;
+}
+
+@keyframes caret-blink {
+    50% { opacity: 0; }
+}
+
+/* Mini UI: file row */
+.how-file {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1rem 0.85rem 1.1rem;
+    border-radius: 16px;
+    background: #fff;
+    color: #12202b;
+}
+
+.how-file-type {
+    flex-shrink: 0;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    background: #e3eef5;
+    color: #1d5f80;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.how-file-name {
+    flex: 1;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.how-file-dl {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1d5f80;
+    color: #fff;
+}
+
+.how-file-dl svg {
+    animation: dl-bounce 1.6s ease-in-out infinite;
+}
+
+@keyframes dl-bounce {
+    0%, 100% { transform: translateY(-2px); }
+    50%      { transform: translateY(3px); }
+}
+
+/* Mini UI: drop zone */
+.how-drop {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 1.1rem 1.25rem;
+    border: 2px dashed rgba(255, 255, 255, 0.45);
+    border-radius: 16px;
+    animation: drop-glow 2.4s ease-in-out infinite;
+}
+
+@keyframes drop-glow {
+    0%, 100% { border-color: rgba(255, 255, 255, 0.35); }
+    50%      { border-color: rgba(246, 180, 52, 0.9); }
+}
+
+/* ---- Play sequence (classes added by parallax.js) ---- */
+/* (The left-side text now animates line by line through data-anim.) */
+.how-animate .how-flow::before {
+    transform: scaleY(0);
+    transition: transform 1.6s cubic-bezier(0.45, 0, 0.25, 1) 0.2s;
+}
+
+.how-animate .how-circle {
+    scale: 0;
+    transition: scale 0.5s cubic-bezier(0.34, 1.6, 0.64, 1);
+    transition-delay: calc(var(--i) * 0.5s + 0.3s);
+}
+
+.how-animate .how-card {
+    opacity: 0;
+    translate: 50px 0;
+    transition: opacity 0.6s ease, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+                transform 0.3s ease, background-color 0.3s ease;
+    transition-delay: calc(var(--i) * 0.5s + 0.45s), calc(var(--i) * 0.5s + 0.45s), 0s, 0s;
+}
+
+.how-animate.is-playing .how-flow::before { transform: scaleY(1); }
+.how-animate.is-playing .how-circle      { scale: 1; }
+.how-animate.is-playing .how-card        { opacity: 1; translate: 0 0; }
+
+/* Phones: smaller circles, no offset */
+@media (max-width: 575.98px) {
+    .how-flow { --circle: 54px; }
+    .how-flow-step { gap: 1.1rem; }
+    .how-circle { font-size: 1.15rem; box-shadow: 0 0 0 6px #0b3a50; }
+    .how-card { padding: 1.25rem 1.3rem; }
+    .step-offset .how-card { margin-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .how-file-dl svg,
+    .how-drop,
+    .how-typed.is-typing::after { animation: none; }
+}
+
+
+/* ---------- Quality check ---------- */
+/* Keep How it works' slanted bottom on top of this section */
+.how-section { z-index: 1; }
+
+.qc-section {
+    position: relative;
+    margin-top: -4vw; /* sit under How it works' slanted bottom */
+    padding: calc(4vw + 5rem) 0 6rem;
+    background: repeating-linear-gradient(135deg, #eef4f8 0 16px, #e2ebf2 16px 32px); /* diagonal stripes */
+    scroll-margin-top: 0;
+}
+
+/* Sample document */
+.qc-doc {
+    position: relative;
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 1.75rem;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 24px 50px rgba(18, 32, 43, 0.15);
+    transform: rotate(-4deg);
+}
+
+.qc-doc-head {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+}
+
+.qc-doc-icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e3eef5;
+    color: #1d5f80;
+}
+
+.qc-doc-title { color: #12202b; font-weight: 700; }
+.qc-doc-meta  { color: #6b7680; font-size: 0.8rem; }
+
+.qc-doc-lines span {
+    display: block;
+    height: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background: #e8eef3;
+}
+
+.qc-doc-checks {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #edf1f4;
+}
+
+.qc-doc-check {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    text-align: center;
+}
+
+.qc-doc-check small {
+    color: #6b7680;
+    font-size: 0.72rem;
+}
+
+.qc-tick {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1f7a5a;
+    border: 2px solid #1f7a5a;
+    color: #fff;
+}
+
+.qc-stamp {
+    position: absolute;
+    right: -14px;
+    bottom: 64px;
+    padding: 0.35rem 0.95rem;
+    border: 3px solid #1f7a5a;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #1f7a5a;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    transform: rotate(-12deg);
+}
+
+/* Heading */
+.qc-title {
+    margin-bottom: 1rem;
+    color: #12202b;
+    font-weight: 700;
+    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+    line-height: 1.1;
+}
+
+.qc-four {
+    font-family: 'Monoton', sans-serif;
+    font-weight: 400;
+    color: #f6b434;
+    font-size: 1.15em;
+}
+
+.qc-lead {
+    max-width: 30rem;
+    margin: 0;
+    color: #5f6b76;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+/* Stage tracker */
+.qc-track-card {
+    --pad-x: 2rem;
+    --pad-y: 2.5rem;
+    --node: 48px;
+    position: relative;
+    padding: var(--pad-y) var(--pad-x);
+    border-radius: 28px;
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(18, 32, 43, 0.08);
+}
+
+/* Line from the first node's centre to the last */
+.qc-line {
+    position: absolute;
+    top: calc(var(--pad-y) + var(--node) / 2 - 2px);
+    left:  calc(var(--pad-x) + (100% - 2 * var(--pad-x)) / 10);
+    right: calc(var(--pad-x) + (100% - 2 * var(--pad-x)) / 10);
+    height: 4px;
+    border-radius: 2px;
+    background: #e3e9ee;
+    overflow: hidden;
+}
+
+.qc-line-fill {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #0e4a66, #1d5f80 70%, #1f7a5a);
+    transform-origin: left;
+}
+
+.qc-steps {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin: 0;
+}
+
+.qc-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0.5rem;
+    text-align: center;
+}
+
+.qc-node {
+    width: var(--node);
+    height: var(--node);
+    margin-bottom: 0.9rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0e4a66;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 0 0 6px #fff, 0 0 0 9px #e3eef5;
+    transition: background-color 0.3s ease, color 0.3s ease, scale 0.4s cubic-bezier(0.34, 1.6, 0.64, 1);
+}
+
+.qc-step-live .qc-node {
+    background: #1f7a5a;
+    box-shadow: 0 0 0 6px #fff, 0 0 0 9px #dcf1e8;
+}
+
+.qc-stage {
+    color: #8a96a0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+.qc-name {
+    margin: 0.15rem 0 0.3rem;
+    color: #12202b;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.qc-desc {
+    color: #6b7680;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+/* ---- Play sequence (classes added by parallax.js) ---- */
+/* Each stage lights up as the line reaches it, then PUBLISHED is stamped */
+.qc-animate .qc-line-fill {
+    transform: scaleX(0);
+    transition: transform 2s cubic-bezier(0.45, 0, 0.55, 1) 0.3s;
+}
+
+.qc-animate .qc-node {
+    background: #e3e9ee;
+    color: #8a96a0;
+    transition-delay: calc(var(--i) * 0.45s + 0.3s);
+}
+
+.qc-animate .qc-tick {
+    background: transparent;
+    border-color: #cfd8e0;
+    color: transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    transition-delay: calc(var(--i) * 0.45s + 0.3s);
+}
+
+.qc-animate .qc-stamp {
+    opacity: 0;
+    scale: 2.2;
+    transition: opacity 0.2s ease 2.4s, scale 0.35s cubic-bezier(0.3, 1.5, 0.5, 1) 2.4s;
+}
+
+.qc-animate.is-playing .qc-line-fill { transform: scaleX(1); }
+.qc-animate.is-playing .qc-node      { background: #0e4a66; color: #fff; }
+.qc-animate.is-playing .qc-step-live .qc-node { background: #1f7a5a; }
+.qc-animate.is-playing .qc-tick      { background: #1f7a5a; border-color: #1f7a5a; color: #fff; }
+.qc-animate.is-playing .qc-stamp     { opacity: 1; scale: 1; }
+
+/* Phones/small tablets: stages stack vertically */
+@media (max-width: 767.98px) {
+    .qc-track-card { --pad-x: 1.5rem; --pad-y: 1.75rem; }
+
+    .qc-steps {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .qc-step {
+        display: grid;
+        grid-template-columns: var(--node) 1fr;
+        column-gap: 1rem;
+        align-items: start;
+        padding: 0;
+        text-align: left;
+    }
+
+    .qc-node { grid-row: span 3; margin: 0; }
+
+    /* Swap the horizontal line for short links between stacked stages */
+    .qc-line { display: none; }
+
+    .qc-step { position: relative; }
+
+    .qc-step:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        top: calc(var(--node) + 6px);
+        bottom: calc(-1.5rem + 6px);
+        left: calc(var(--node) / 2 - 2px);
+        width: 4px;
+        border-radius: 2px;
+        background: #e3e9ee;
+    }
+
+    .qc-stamp { right: 0; }
+}
+
+
+/* ---------- How to open (council & committee access) ---------- */
+.access-section {
+    padding: 6rem 0;
+    background-color: #eaf1f6;
+    background-image: radial-gradient(circle, #c3cfd9 1.2px, transparent 1.8px); /* same dots as What's inside */
+    background-size: 24px 24px;
+    scroll-margin-top: 40px;
+}
+
+.access-panel {
+    position: relative;
+    overflow: hidden;
+    padding: 4.5rem 4rem;
+    border-radius: 40px;
+    color: #fff;
+    background:
+        radial-gradient(circle at 90% 0%, rgba(246, 180, 52, 0.25), transparent 40%), /* warm glow top-right */
+        linear-gradient(135deg, #0a3a50 0%, #0e4a66 55%, #12607f 100%);
+    box-shadow: 0 30px 60px rgba(14, 74, 102, 0.25);
+}
+
+/* Faint big rings in the background */
+.access-ring {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.ring-1 { width: 720px; height: 720px; left: 45%; top: -260px; }
+.ring-2 { width: 900px; height: 900px; left: -420px; bottom: -620px; }
+
+.access-eyebrow { color: #f6b434; max-width: 18rem; }
+
+.access-title {
+    margin-bottom: 1.5rem;
+    color: #fff;
+    font-weight: 700;
+    font-size: clamp(2.75rem, 5vw, 4rem);
+    line-height: 1.05;
+}
+
+.access-title-logo {
+    display: block;
+    margin-top: 0.4rem;
+    font-family: 'Monoton', sans-serif;
+    font-weight: 400;
+    line-height: 1.05;
+}
+
+.access-lead {
+    max-width: 24rem;
+    margin-bottom: 2rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.15rem;
+    line-height: 1.65;
+}
+
+.access-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 22rem;
+    padding: 1rem 1.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    line-height: 1.35;
+}
+
+.access-note a {
+    flex-shrink: 0;
+    color: #f6b434;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ---- ID badges ---- */
+.badge-row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.badge-wrap {
+    perspective: 900px;
+    transform-origin: 50% 0; /* swing from the lanyard slot */
+    animation: badge-sway 5s ease-in-out infinite;
+}
+
+.badge-wrap:nth-child(1) { --tilt: -5deg; }
+.badge-wrap:nth-child(2) { --tilt: 4deg; margin-top: 3rem; animation-delay: -2.5s; }
+
+@keyframes badge-sway {
+    0%, 100% { rotate: var(--tilt); }
+    50%      { rotate: calc(var(--tilt) * 0.4); }
+}
+
+.badge-wrap:hover { animation-play-state: paused; }
+
+/* Drop in from above when scrolled into view */
+.badge-wrap.reveal {
+    translate: 0 -80px;
+    transition: opacity 0.7s ease, translate 0.9s cubic-bezier(0.34, 1.5, 0.64, 1);
+    transition-delay: calc(var(--i) * 0.2s);
+}
+.badge-wrap.reveal.is-visible { translate: 0 0; }
+
+.id-badge {
+    --accent: #0e4a66; /* hero teal */
+    --accent-ink: #fff;
+    position: relative;
+    width: 260px;
+    overflow: hidden;
+    border-radius: 24px;
+    background: #fff;
+    color: #12202b;
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.3);
+    transform-style: preserve-3d;
+    transition: transform 0.25s ease-out;
+}
+
+.id-teal-light {
+    --accent: #1d5f80; /* lighter shade of the same teal */
+    --accent-ink: #fff;
+}
+
+/* Shine that follows the mouse (position set by parallax.js) */
+.id-badge::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--shine-x, 50%) var(--shine-y, 0%), rgba(255, 255, 255, 0.45), transparent 45%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.id-badge:hover::after { opacity: 1; }
+
+.badge-slot {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    width: 76px;
+    height: 16px;
+    margin-left: -38px;
+    border-radius: 999px;
+    background: #eaf1f6;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+    z-index: 1;
+}
+
+.badge-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 2.6rem 1.25rem 0.9rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+}
+
+.badge-brand {
+    font-family: 'Monoton', sans-serif;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.badge-kind {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.badge-body {
+    padding: 1.1rem 1.25rem 1.25rem;
+}
+
+.badge-top {
+    display: flex;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.badge-photo {
+    position: relative;
+    flex-shrink: 0;
+    width: 96px;
+    height: 108px;
+    border: 2px solid #dbe6ee;
+    border-radius: 14px;
+    background: #f3f7fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge-photo img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+/* Holographic sticker */
+.badge-holo {
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    width: 30px;
+    height: 30px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: conic-gradient(#f9a8d4, #a5b4fc, #67e8f9, #86efac, #fde68a, #f9a8d4);
+    animation: holo-spin 4s linear infinite;
+}
+
+@keyframes holo-spin {
+    to { filter: hue-rotate(360deg); }
+}
+
+.badge-chip {
+    display: block;
+    width: 38px;
+    height: 30px;
+    margin-bottom: 0.9rem;
+    border-radius: 7px;
+    background: linear-gradient(135deg, #f7d77a, #d6a933 60%, #f1cc64);
+    box-shadow: inset 0 0 0 1px rgba(120, 85, 10, 0.35);
+}
+
+.badge-label {
+    display: block;
+    color: #6b7680;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.badge-role {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.15;
+}
+
+.badge-desc {
+    margin: 0.2rem 0 0.9rem;
+    color: #4a5662;
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+
+/* Barcode made from uneven stripes */
+.badge-barcode {
+    display: block;
+    height: 38px;
+    margin-bottom: 1rem;
+    background: repeating-linear-gradient(90deg,
+        #12202b 0 2px, transparent 2px 4px,
+        #12202b 4px 5px, transparent 5px 7px,
+        #12202b 7px 10px, transparent 10px 11px,
+        #12202b 11px 12px, transparent 12px 15px,
+        #12202b 15px 17px, transparent 17px 18px);
+}
+
+.badge-btn {
+    display: block;
+    padding: 0.8rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 600;
+    text-align: center;
+    transition: filter 0.2s ease;
+}
+
+.badge-btn:hover {
+    color: var(--accent-ink);
+    filter: brightness(1.08);
+}
+
+@media (max-width: 767.98px) {
+    .access-panel { padding: 3rem 1.5rem; border-radius: 28px; }
+    .badge-row { flex-wrap: wrap; }
+    .badge-wrap:nth-child(2) { margin-top: 0; }
+    .id-badge { width: 240px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .badge-wrap, .badge-holo { animation: none; }
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+    padding: 4.5rem 0 2rem;
+    background: #06222f;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.footer-logo {
+    height: 56px;
+    width: auto;
+    margin-bottom: 1rem;
+}
+
+.footer-about {
+    max-width: 24rem;
+    line-height: 1.6;
+}
+
+.footer-seals {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+}
+
+.footer-seals img {
+    height: 44px;
+    width: auto;
+}
+
+.footer-heading {
+    margin-bottom: 1rem;
+    color: #f6b434;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li { margin-bottom: 0.6rem; }
+
+.site-footer a:not(.btn-pill) {
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.2s ease;
+}
+
+.site-footer a:not(.btn-pill):hover { color: #f6b434; }
+
+.footer-small {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 0.85rem;
+}
+
+
+/* ---------- Extra motion: hero entrance, navbar, headline lines, count-up ---------- */
+/* Hero content waits behind the intro, then plays its staggered entrance */
+html.anim-ready.intro-active [data-anim].in-view {
+    opacity: 0;
+    --ay: 40px;
+}
+
+/* Each "Find it, / use it, / share it." line slides in on its own */
+.title-line {
+    display: inline-block;
+}
+
+/* Navbar slides down once the intro is done */
+@keyframes nav-in {
+    from { opacity: 0; translate: 0 -100%; }
+    to   { opacity: 1; translate: 0 0; }
+}
+
+html.anim-ready #siteNav {
+    animation: nav-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both;
+}
+
+html.anim-ready.intro-active #siteNav {
+    animation-play-state: paused;
+}
+
+/* The "4" bumps each time it counts up */
+.qc-four {
+    display: inline-block;
+}
+
+.qc-four.is-bumping {
+    animation: four-bump 0.35s cubic-bezier(0.34, 1.6, 0.64, 1);
+}
+
+@keyframes four-bump {
+    0%   { scale: 0.6; rotate: -12deg; }
+    100% { scale: 1;   rotate: 0deg; }
+}
+
+/* Section eyebrows: a short yellow line draws in before the text */
+html.anim-ready .section-eyebrow::before {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 2px;
+    margin-right: 0;
+    vertical-align: middle;
+    background: currentColor;
+    transition: width 0.6s ease 0.2s, margin-right 0.6s ease 0.2s;
+}
+
+html.anim-ready .in-view .section-eyebrow::before,
+html.anim-ready .section-eyebrow.in-view::before,
+html.anim-ready .is-playing .section-eyebrow::before {
+    width: 28px;
+    margin-right: 10px;
+}
+
+
+
+/* ---------- How it works: giant NEXUS slides in and out ---------- */
+/* Comes in from the right; leaves to the left when scrolled past (classes set by parallax.js) */
+html.anim-ready .how-watermark[data-anim="slide-x"] {
+    --ax: 70vw;
+    transition:
+        opacity 1s ease,
+        --ax 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+html.anim-ready .how-watermark[data-anim="slide-x"].exit-left {
+    --ax: -70vw;
+}
+
+html.anim-ready .how-watermark[data-anim="slide-x"].in-view {
+    --ax: 0px;
+}
+
+
+/* ---------- Mobile fit ---------- */
+/* Tablets and phones */
+@media (max-width: 767.98px) {
+    /* Less empty space between sections */
+    .inside-section { padding: 3.5rem 0; }
+    .how-section    { padding: calc(4vw + 3rem) 0 calc(4vw + 3.5rem); }
+    .qc-section     { padding: calc(4vw + 3rem) 0 3.5rem; }
+    .access-section { padding: 3.5rem 0; }
+    .site-footer    { padding: 3rem 0 1.5rem; }
+
+    /* Buttons: smaller, easier to tap without taking over the screen */
+    .btn-pill {
+        padding: 0.6rem 1.15rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-outline-pill {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .badge-btn {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    /* "Students do not need to log in" note: stack instead of a squashed pill */
+    .access-note {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+        max-width: 100%;
+        padding: 0.85rem 1.1rem;
+        border-radius: 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Phones */
+@media (max-width: 575.98px) {
+    /* Hero */
+    .hero-title   { font-size: clamp(2.9rem, 15vw, 4rem); }
+    .text-accent  { font-size: 1.15rem; padding-left: 0.75rem; }
+    .hero-pill    { font-size: 0.8rem; }
+    .hero-logos img { height: 40px; }
+    .hero-tags    { gap: 0.4rem; }
+    .hero-tags li { padding: 0.25rem 0.65rem; font-size: 0.75rem; }
+    .hero-trust   { font-size: 0.8rem; }
+    .resource-stack { padding: 1rem 0 2rem; }
+
+    /* Headings */
+    .section-title  { font-size: 1.6rem; }
+    .how-big-title  { font-size: 2.6rem; }
+    .qc-title       { font-size: 2rem; }
+    .access-title   { font-size: 2.4rem; }
+    .how-lead, .access-lead, .qc-lead { font-size: 1rem; }
+
+    /* Paired buttons share the row evenly instead of stacking oversized */
+    .how-intro .d-flex.gap-3 {
+        flex-wrap: nowrap !important;
+        gap: 0.6rem !important;
+    }
+
+    .how-intro .btn-pill {
+        flex: 1;
+        padding: 0.6rem 0.75rem;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    /* What's inside header: button sits under the title, normal size */
+    .inside-section .mb-5 { margin-bottom: 2rem !important; }
+
+    /* Folder cards a bit shorter */
+    .folder { height: 180px; }
+
+    /* Quality check */
+    .qc-doc   { padding: 1.25rem; }
+    .qc-stamp { font-size: 0.9rem; letter-spacing: 2px; bottom: 56px; }
+    .qc-track-card { border-radius: 20px; }
+
+    /* Access badges: smaller so they sit nicely one under the other */
+    .access-panel { padding: 2.5rem 1.25rem; }
+    .id-badge     { width: 230px; }
+    .badge-role   { font-size: 1.15rem; }
+
+    /* Footer button */
+    .site-footer .btn-pill { padding: 0.5rem 1rem; font-size: 0.85rem; }
+}
+
+/* Phones: log-in buttons that replace the ID cards (shown with Bootstrap's d-md-none) */
+.access-mobile-login {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+}
+
+.access-mobile-login .btn-pill {
+    text-align: center;
+}
+
+/* ---------- Navbar active link ---------- */
+/* Underline that grows under the link for the section on screen.
+   It uses the link's own colour, so it always matches the text. */
+#siteNav .nav-link {
+    position: relative;
+}
+
+#siteNav .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    bottom: 2px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: left 0.3s ease, right 0.3s ease;
+}
+
+#siteNav .nav-link.active::after {
+    left: 0.5rem;
+    right: 0.5rem;
+}
+
+#siteNav .nav-link.active {
+    font-weight: 700;
+}
+
+/* Teal text (and underline) once the navbar turns white */
+#siteNav.scrolled .nav-link.active {
+    color: #0e4a66;
+}
+
+/* In the mobile menu, keep the underline short and left-aligned */
+@media (max-width: 991.98px) {
+    #siteNav .nav-link.active::after { left: 0; right: auto; width: 2.5rem; }
+}

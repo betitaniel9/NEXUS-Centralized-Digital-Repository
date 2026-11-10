@@ -1,0 +1,360 @@
+body {
+    background: #0C3347;
+    font-family: "Space Grotesk", sans-serif;
+}
+
+/* Login Container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Login Card */
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    min-height: 480px;
+
+    border: none;
+    border-radius: 18px;
+
+    padding: 20px;
+    background-color: #ffffff;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Card Content */
+.login-card .card-body {
+    padding: 10px 15px;
+}
+
+/*login header css*/
+.login-header {
+    margin: 30px;
+    margin-bottom: 50px;
+}
+
+/* forgot password css */
+.forgot-pass {
+    margin-bottom: 10px;
+    font-size: 12px;
+    text-decoration: underline;
+}
+/* btn css */
+.btn {
+    background-color: #0C3347;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: white;
+    color: #0C3347;
+    border: 1px inset #0C3347;
+}
+/* text css */
+.restriction {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/*form control css*/
+.form-control {
+    border-radius: 8px;
+    border: none;
+    padding: 10px;
+    font-size: 14px;
+    box-shadow: 0 3px 11.2px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none; 
+    box-shadow: 0 3px 11.2px rgba(0, 0, 0, 0.25);                                 
+                             
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #495057;
+}
+
+.contact {
+    text-align: center;
+    font-size: 12px;
+    color: #6c757d;
+    margin-bottom: 0px;
+    margin-top: 20px;
+}
+
+/* Background blurred circles (top-left & bottom-right) */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: -2;
+}
+
+body::before {
+    width: 600px;
+    height: 600px;
+    top: -200px;
+    left: -200px;
+    background: #7FA3AE;
+    opacity: 0.7;
+}
+
+body::after {
+    width: 650px;
+    height: 650px;
+    bottom: -220px;
+    right: -220px;
+    background: #0A6FB0;
+    opacity: 0.85;
+}
+
+
+/* Grid lines (sits above the circles, behind the card) */
+html::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+
+/* Light beams travelling along the grid lines */
+.grid-beams {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.beam {
+    position: absolute;
+    opacity: 0;
+    animation-duration: var(--dur);
+    animation-delay: var(--delay);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.beam-h {
+    top: calc(var(--line) * 50px);
+    left: 0;
+    width: 160px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(120, 200, 255, 0.9));
+    box-shadow: 0 0 8px rgba(120, 200, 255, 0.6);
+    animation-name: beam-x;
+}
+
+.beam-v {
+    left: calc(var(--line) * 50px);
+    top: 0;
+    width: 1px;
+    height: 160px;
+    background: linear-gradient(180deg, transparent, rgba(120, 200, 255, 0.9));
+    box-shadow: 0 0 8px rgba(120, 200, 255, 0.6);
+    animation-name: beam-y;
+}
+
+@keyframes beam-x {
+    0%   { transform: translateX(-160px); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateX(100vw); opacity: 0; }
+}
+
+@keyframes beam-y {
+    0%   { transform: translateY(-160px); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .grid-beams { display: none; }
+}
+
+
+/* Password field eye toggle */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper .form-control {
+    padding-right: 42px; /* keeps text from running under the eye */
+}
+
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    color: #6c757d;
+    cursor: pointer;
+}
+
+.toggle-password:hover {
+    color: #0C3347;
+}
+
+
+/* ===== Phones (576px and below) ===== */
+@media (max-width: 576px) {
+    /* Lock the page to the screen: no scrolling or bounce */
+    html,
+    body {
+        height: 100svh;
+        overflow: hidden;
+        overscroll-behavior: none;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 12px 0;
+    }
+
+    .logo-wrapper {
+        flex-shrink: 0;
+    }
+
+    /* Logo: Bootstrap's w-50 / w-25 make it tiny on a phone */
+    .logo-container {
+        width: 100% !important;
+    }
+
+    .logo {
+        width: 45% !important;
+        max-width: 180px;
+    }
+
+    /* Keep a gap between the card and the screen edges */
+    .login-container {
+        padding: 0 16px;
+    }
+
+    .login-card {
+        min-height: auto;
+        padding: 12px;
+        border-radius: 14px;
+    }
+
+    .login-card .card-body {
+        padding: 8px;
+    }
+
+    .login-header {
+        margin: 8px 0 16px;
+    }
+
+    .login-header p {
+        margin-bottom: 0;
+    }
+
+    .contact {
+        margin-top: 12px;
+    }
+
+    .login-header .card-title {
+        font-size: 1.6rem;
+    }
+
+    /* 16px stops iPhones from zooming in when a field is tapped */
+    .form-control {
+        font-size: 16px;
+        padding: 12px;
+    }
+
+    .password-wrapper .form-control {
+        padding-right: 46px;
+    }
+
+    /* Bigger tap area for the eye */
+    .toggle-password {
+        right: 6px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .btn {
+        padding: 12px 20px;
+    }
+
+    /* Smaller background circles so they don't swamp a small screen */
+    body::before {
+        width: 320px;
+        height: 320px;
+        top: -120px;
+        left: -120px;
+        filter: blur(80px);
+    }
+
+    body::after {
+        width: 360px;
+        height: 360px;
+        bottom: -140px;
+        right: -140px;
+        filter: blur(80px);
+    }
+}
+
+/* Small tablets: logo a bit larger than desktop's w-25 */
+@media (min-width: 577px) and (max-width: 991px) {
+    .logo {
+        width: 50% !important;
+        max-width: 200px;
+    }
+}
+
+
+/* Very short phones: if the card can't fit, allow scrolling so nothing is cut off */
+@media (max-width: 576px) and (max-height: 620px) {
+    html,
+    body {
+        height: auto;
+        overflow: auto;
+    }
+
+    body {
+        display: block;
+    }
+}
+
+
+/* Outlined "Create account" button (inverse of LOG IN) */
+.btn.signup-btn {
+    background-color: transparent;
+    color: #0C3347;
+    border: 1px solid #0C3347;
+}
+
+.btn.signup-btn:hover {
+    background-color: #0C3347;
+    color: #ffffff;
+}
