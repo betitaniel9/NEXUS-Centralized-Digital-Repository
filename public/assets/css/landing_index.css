@@ -8,6 +8,44 @@ body {
     letter-spacing: 1px;
 }
 
+/* Navbar Login / Register (links styled as buttons) */
+#siteNav .login_btn,
+#siteNav .register_btn {
+    display: inline-block;
+    background-color: transparent;
+    color: #ffffff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#siteNav .login_btn:hover,
+#siteNav .register_btn:hover {
+    background-color: #ffffff;
+    color: #0C3347;
+}
+
+/* Once the navbar turns white: dark text, teal hover */
+#siteNav.scrolled .login_btn,
+#siteNav.scrolled .register_btn {
+    color: #0C3347;
+}
+
+#siteNav.scrolled .login_btn:hover,
+#siteNav.scrolled .register_btn:hover {
+    background-color: #0C3347;
+    color: #ffffff;
+}
+
+/* Login Container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .navbar .nav-link {
     font-weight: 500;
     margin: 0 0.5rem;
@@ -1773,4 +1811,189 @@ html.anim-ready .how-watermark[data-anim="slide-x"].in-view {
 /* In the mobile menu, keep the underline short and left-aligned */
 @media (max-width: 991.98px) {
     #siteNav .nav-link.active::after { left: 0; right: auto; width: 2.5rem; }
+}
+
+/* ---------- Page transitions to Login / Register ---------- */
+/* Lets the browser animate from this page into the login/register pages (the circle is defined in login.css) */
+@view-transition {
+    navigation: auto;
+}
+
+
+/* ---------- Hero left side: ongoing animations ---------- */
+/* Everything here waits for the intro, then starts after the entrance has played */
+
+/* Pill: pulsing "live" dot + a shine that sweeps across every few seconds */
+.hero-pill {
+    position: relative;
+    overflow: hidden;
+    padding-left: 0.9rem;
+    gap: 0.6rem;
+}
+
+.hero-pill::before {
+    content: "";
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4fd1a5;
+    box-shadow: 0 0 0 0 rgba(79, 209, 165, 0.7);
+    animation: live-dot 2s ease-out 1.2s infinite;
+}
+
+@keyframes live-dot {
+    0%   { box-shadow: 0 0 0 0 rgba(79, 209, 165, 0.7); }
+    70%  { box-shadow: 0 0 0 8px rgba(79, 209, 165, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(79, 209, 165, 0); }
+}
+
+.hero-pill::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -60%;
+    width: 50%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    animation: pill-shine 4.5s ease-in-out 1.6s infinite;
+}
+
+@keyframes pill-shine {
+    0%, 60% { left: -60%; }
+    100%    { left: 120%; }
+}
+
+/* Logos: float gently, out of step with each other; spin a little on hover */
+.hero-logos img {
+    animation: logo-float 4s ease-in-out 1.2s infinite;
+    transition: rotate 0.5s cubic-bezier(0.34, 1.6, 0.64, 1), scale 0.3s ease;
+}
+
+.hero-logos img:hover {
+    rotate: 20deg;
+    scale: 1.12;
+}
+
+@keyframes logo-float {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -6px; }
+}
+
+/* "CICS NEXUS" intro: letters flip up into place one by one, slightly blurred at first */
+.title-letters .ltr {
+    display: inline-block;
+    transform-origin: 50% 100%;
+    /* Each letter gets its own copy of the light band; the delays make it ripple across the word */
+    background: linear-gradient(110deg,
+        #ffffff 0%, #ffffff 35%,
+        #ffe7a8 45%, #ffffff 50%, #bfe9ff 55%,
+        #ffffff 65%, #ffffff 100%);
+    background-size: 300% 100%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation:
+        letter-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) calc(0.35s + var(--l) * 0.07s) both,
+        letter-sweep 5s ease-in-out calc(1.8s + var(--l) * 0.08s) infinite;
+}
+
+@keyframes letter-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.45em) rotateX(-90deg);
+        filter: blur(8px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+        filter: blur(0);
+    }
+}
+
+@keyframes letter-sweep {
+    0%, 70% { background-position: 100% 0; }
+    100%    { background-position: 0% 0; }
+}
+
+/* Logos spin in as the title builds (backwards fill only, so hover still works afterwards) */
+.hero-logos img {
+    animation:
+        logo-pop 0.9s cubic-bezier(0.34, 1.5, 0.64, 1) 0.25s backwards,
+        logo-float 4s ease-in-out 1.2s infinite;
+}
+
+.hero-logos img:nth-child(2) {
+    animation-delay: 0.4s, 3.2s;
+}
+
+@keyframes logo-pop {
+    from { scale: 0; rotate: -180deg; opacity: 0; }
+    to   { scale: 1; rotate: 0deg;    opacity: 1; }
+}
+
+/* Tagline: the yellow bar grows in, then the highlighter draws under "fellow ARASOF students." */
+.text-accent {
+    position: relative;
+    border-left-color: transparent;
+}
+
+.text-accent::before {
+    content: "";
+    position: absolute;
+    left: -4px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 2px;
+    background: #f6b434;
+    transform-origin: top;
+    animation: bar-grow 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 1s both;
+}
+
+@keyframes bar-grow {
+    from { transform: scaleY(0); }
+    to   { transform: scaleY(1); }
+}
+
+.text-highlight {
+    background: linear-gradient(rgba(246, 180, 52, 0.45), rgba(246, 180, 52, 0.45)) 0 88% / 0% 0.35em no-repeat;
+    animation: marker-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) 1.5s forwards;
+}
+
+@keyframes marker-draw {
+    to { background-size: 100% 0.35em; }
+}
+
+/* Trust line: the shield gives a little heartbeat now and then */
+.hero-trust svg {
+    animation: shield-beat 3s ease-in-out 2s infinite;
+}
+
+@keyframes shield-beat {
+    0%, 70%, 100% { scale: 1; }
+    78%           { scale: 1.25; }
+    86%           { scale: 0.95; }
+    93%           { scale: 1.1; }
+}
+
+/* Hold all of these until the intro is gone */
+html.intro-active .hero-copy *,
+html.intro-active .hero-copy *::before,
+html.intro-active .hero-copy *::after {
+    animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-pill::before,
+    .hero-pill::after,
+    .hero-logos img,
+    .title-letters .ltr,
+    .hero-trust svg {
+        animation: none;
+    }
+
+    .text-accent::before { animation: none; }
+    .text-highlight { animation: none; background-size: 100% 0.35em; }
 }

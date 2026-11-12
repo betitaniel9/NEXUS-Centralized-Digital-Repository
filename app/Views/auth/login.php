@@ -18,8 +18,47 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= base_url('assets/css/login.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/flash.css') ?>">
+
+    <!-- Arriving from a Login / Register link: reveal this page in a circle from where it was clicked.
+         Modern browsers draw the circle over the previous page (view transition) as soon as this page is ready;
+         older browsers fall back to revealing this page from a dark background. -->
+    <script>
+        (function () {
+            let saved = null;
+            try {
+                saved = JSON.parse(sessionStorage.getItem('nexusWipe') || 'null');
+                sessionStorage.removeItem('nexusWipe');
+            } catch (e) { /* storage blocked */ }
+
+            const root = document.documentElement;
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const useCircle = saved && !reduce;
+
+            if (useCircle) {
+                root.style.setProperty('--wx', (saved.x * window.innerWidth) + 'px');
+                root.style.setProperty('--wy', (saved.y * window.innerHeight) + 'px');
+            }
+
+            if ('CSSViewTransitionRule' in window) {
+                window.addEventListener('pagereveal', e => {
+                    if (e.viewTransition) {
+                        if (useCircle) root.classList.add('vt-wipe');
+                        else e.viewTransition.skipTransition(); // no click origin: just show the page
+                    } else if (useCircle) {
+                        root.classList.add('wipe-in');
+                    }
+                });
+            } else if (useCircle) {
+                root.classList.add('wipe-in');
+            }
+        })();
+    </script>
 </head>
 <body>
+    <!-- Login / register result pop-up -->
+    <?= view('partials/flash') ?>
+
 <!-- Background beams moving along the grid (decorative) -->
     <div class="grid-beams" aria-hidden="true">
         <span class="beam beam-h" style="--line:3;  --dur:1s;  --delay:8s;"></span>
@@ -30,6 +69,12 @@
         <span class="beam beam-v" style="--line:19; --dur:6s;  --delay:5s;"></span>
         <span class="beam beam-v" style="--line:27; --dur:2s;  --delay:0.5s;"></span>
     </div>
+
+    <!-- Back to the landing page -->
+    <a href="<?= base_url('/') ?>" class="back-home" aria-label="Back to home page">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <span>Back to home</span>
+    </a>
 
 <!-- Logo -->
     <div class="logo-wrapper d-flex justify-content-center align-items-center">
@@ -63,6 +108,10 @@
                             id="email"
                             name="email"
                             placeholder="example@g.batstate-u.edu.ph"
+                            value="<?= esc(old('email') ?? session()->getFlashdata('registered_email') ?? '') ?>"
+                            pattern="[^@\s]+@g\.batstate-u\.edu\.ph"
+                            title="Use your G Suite account (ending in @g.batstate-u.edu.ph)"
+                            autocomplete="email"
                             required
                         >
                     </div>
@@ -82,6 +131,7 @@
                                 id="password"
                                 name="password"
                                 placeholder="Enter your password"
+                                autocomplete="current-password"
                                 required
                             >
                             <button type="button" class="toggle-password" onclick="togglePassword()" aria-label="Show password">
@@ -150,5 +200,7 @@
         }
     </script>
 
+    <!-- Circle wipe between Login and Register -->
+    <script src="<?= base_url('assets/js/page-transition.js') ?>"></script>
 </body>
 </html>

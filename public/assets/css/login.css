@@ -1,19 +1,28 @@
 body {
     background: #0C3347;
     font-family: "Space Grotesk", sans-serif;
+    /* Centre the logo + card in the middle of the screen (login and register) */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-/* Login Container */
+/* Centre the card left-to-right */
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    padding: 0 16px;
 }
+
+
 
 /* Login Card */
 .login-card {
     width: 100%;
-    max-width: 420px;
+    max-width: 600px;
     min-height: 480px;
 
     border: none;
@@ -358,3 +367,124 @@ html::after {
     background-color: #0C3347;
     color: #ffffff;
 }
+
+/* ---------- Back to home button (top-left) ---------- */
+.back-home {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(6px);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, gap 0.2s ease;
+}
+
+.back-home:hover {
+    background: #ffffff;
+    color: #0C3347;
+    gap: 12px; /* arrow nudges left */
+}
+
+.back-home:focus-visible {
+    outline: 3px solid #f6b434;
+    outline-offset: 3px;
+}
+
+/* Phones: icon only, so it doesn't crowd the logo */
+@media (max-width: 576px) {
+    .back-home {
+        top: 12px;
+        left: 12px;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        justify-content: center;
+    }
+
+    .back-home span {
+        display: none;
+    }
+}
+
+/* ---------- Circle reveal when arriving from the landing page ---------- */
+/* (No background on <html> here: the page's dark colour must stay on <body>,
+   otherwise it covers the blurred circles and grid lines behind the card.) */
+
+/* The page opens up in a growing circle from the clicked spot (--wx / --wy set in the <head> script) */
+html.wipe-in body {
+    animation: wipe-reveal 1s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+}
+
+@keyframes wipe-reveal {
+    from { clip-path: circle(0% at var(--wx, 50%) var(--wy, 50%)); }
+    to   { clip-path: circle(150% at var(--wx, 50%) var(--wy, 50%)); }
+}
+
+/* Card and logo settle in as the circle opens */
+html.wipe-in .login-card,
+html.wipe-in .logo-wrapper {
+    animation: wipe-content 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+}
+
+@keyframes wipe-content {
+    from { opacity: 0; scale: 0.94; }
+    to   { opacity: 1; scale: 1; }
+}
+
+/* ---------- Instant page transition (view transitions) ---------- */
+/* The new page loads straight away; the browser then opens it in a circle
+   over the previous page, starting from where the link was clicked. */
+@view-transition {
+    navigation: auto;
+}
+
+/* Keep the old page still underneath while the circle grows */
+::view-transition-old(root) {
+    animation: none;
+}
+
+html.vt-wipe::view-transition-new(root) {
+    animation: vt-reveal 0.7s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+@keyframes vt-reveal {
+    from { clip-path: circle(0px at var(--wx, 50%) var(--wy, 50%)); }
+    to   { clip-path: circle(150vmax at var(--wx, 50%) var(--wy, 50%)); }
+}
+
+/* Card and logo settle in as the circle opens (both reveal styles) */
+html.vt-wipe .login-card,
+html.vt-wipe .logo-wrapper {
+    animation: wipe-content 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
+}
+
+/* Field-level error under an input (register form) */
+.field-error {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #dc3545;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+

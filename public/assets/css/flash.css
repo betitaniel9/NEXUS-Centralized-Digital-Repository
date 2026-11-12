@@ -1,0 +1,93 @@
+/* ---------------------------------------------------------
+   Result pop-up for login, register, logout and SC pages (app/Views/partials/flash.php)
+   --------------------------------------------------------- */
+.flash-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2000;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: calc(100% - 32px);
+    max-width: 440px;
+    padding: 14px 16px 18px;
+    overflow: hidden;
+
+    background: #ffffff;
+    border-radius: 12px;
+    border-left: 5px solid var(--flash-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    color: #1f2933;
+    font-size: 14px;
+
+    animation: flash-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.flash-success { --flash-color: #198754; }
+.flash-error   { --flash-color: #dc3545; }
+
+.flash-icon {
+    color: var(--flash-color);
+    font-size: 20px;
+    margin-top: 1px;
+}
+
+.flash-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.flash-text strong {
+    color: var(--flash-color);
+    font-size: 15px;
+}
+
+.flash-close {
+    background: none;
+    border: none;
+    padding: 0 2px;
+    color: #6c757d;
+    cursor: pointer;
+}
+
+.flash-close:hover { color: #1f2933; }
+
+/* Bar along the bottom that shrinks until the pop-up closes itself */
+.flash-timer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 100%;
+    background: var(--flash-color);
+    transform-origin: left;
+    animation: flash-timer 6s linear forwards;
+}
+
+.flash-hide {
+    animation: flash-out 0.3s ease forwards;
+}
+
+@keyframes flash-in {
+    from { opacity: 0; transform: translate(-50%, -20px); }
+    to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes flash-out {
+    to { opacity: 0; transform: translate(-50%, -20px); }
+}
+
+@keyframes flash-timer {
+    to { transform: scaleX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .flash-toast,
+    .flash-hide { animation: none; }
+    .flash-timer { display: none; }
+}

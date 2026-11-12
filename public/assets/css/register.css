@@ -40,3 +40,109 @@ body {
         padding: 20px 0;
     }
 }
+
+/* ---------- Terms and Conditions ---------- */
+.terms-link {
+    color: #0e4a66;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.terms-link:hover {
+    color: #1d5f80;
+}
+
+.terms-modal .modal-content {
+    border: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    font-family: "Space Grotesk", sans-serif;
+}
+
+.terms-modal .modal-header {
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e3e9ee;
+}
+
+.terms-modal .modal-title {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #12202b;
+}
+
+.terms-date {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    color: #6b7680;
+}
+
+.terms-body {
+    padding: 1.5rem;
+    color: #3a4650;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.terms-body h3 {
+    margin: 1.5rem 0 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0e4a66;
+}
+
+.terms-body h3:first-child {
+    margin-top: 0;
+}
+
+.terms-body ul {
+    padding-left: 1.25rem;
+}
+
+.terms-body li {
+    margin-bottom: 0.3rem;
+}
+
+.terms-closing {
+    margin: 1.75rem 0 0;
+    padding: 1rem 1.15rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #12202b5d;
+}
+
+.terms-modal .modal-footer {
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e3e9ee;
+}
+
+.terms-btn-primary,
+.terms-btn-secondary {
+    padding: 0.55rem 1.4rem;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.terms-btn-primary {
+    background: #0e4a66;
+    color: #fff;
+}
+
+.terms-btn-primary:hover {
+    background: #1d5f80;
+    color: #fff;
+}
+
+.terms-btn-secondary {
+    border: 1px solid #cfd8e0;
+    background: #fff;
+    color: #12202b;
+}
+
+.terms-btn-secondary:hover {
+    border-color: #0e4a66;
+    color: #0e4a66;
+}

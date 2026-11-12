@@ -53,7 +53,12 @@
             const link = e.target.closest('a');
             if (link) {
                 e.preventDefault();
-                setTimeout(() => { window.location.href = link.href; }, 500);
+                const x = e.clientX, y = e.clientY;
+                setTimeout(() => {
+                    // Use the circle wipe to the login page if it's loaded, otherwise just go
+                    if (window.nexusWipeTo) window.nexusWipeTo(link.href, x, y);
+                    else window.location.href = link.href;
+                }, 500);
             }
         });
     });

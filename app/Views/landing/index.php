@@ -56,9 +56,8 @@
                     <li class="nav-item"><a class="nav-link" href="#access">How to Open</a></li>
                 </ul>
                 <div class="d-flex gap-2">
-                    <a class="" href="<?= base_url('login') ?>">Login</a>
-                    <a> | </a>
-                    <a class="" href="<?= base_url('register') ?>">Register</a>
+                    <a class="login_btn" href="<?= base_url('login') ?>">Login</a>
+                    <a class="register_btn" href="<?= base_url('register') ?>">Register</a>
                 </div>
             </div>
         </div>
@@ -79,8 +78,10 @@
                         <img src="<?= base_url('assets/images/CICS-logo.png') ?>" alt="CICS logo">
                         <img src="<?= base_url('assets/images/CICS-SC-logo.png') ?>" alt="CICS Student Council logo">
                     </div>
-                    <h1 class="hero-title" data-anim="up" data-speed="-0.08" style="--delay: 0.3s">
-                        CICS NEXUS
+                    <h1 class="hero-title" data-speed="-0.08">
+                        <!-- Each letter is its own span so it can animate in one by one -->
+                        <span class="title-letters" aria-hidden="true"><?php foreach (str_split('CICS NEXUS') as $i => $ch): ?><?= $ch === ' ' ? '<br>' : '<span class="ltr" style="--l: ' . $i . '">' . $ch . '</span>' ?><?php endforeach; ?></span>
+                        <span class="visually-hidden">CICS NEXUS</span>
                         <span class="text-accent" data-anim="left" style="--delay: 0.55s">
                             Study smarter with notes from
                             <span class="text-highlight">fellow ARASOF students.</span>
@@ -368,6 +369,7 @@
                 'logo'  => 'assets/images/CICS-SC-logo.png',
                 'alt'   => 'CICS Student Council logo',
                 'role'  => 'Student Council',
+                'key'   => 'council',
                 'desc'  => 'Secretary, Vice President and President. Approve materials and monitor the system.',
             ],
             [
@@ -375,6 +377,7 @@
                 'logo'  => 'assets/images/CICS-logo.png',
                 'alt'   => 'CICS logo',
                 'role'  => 'Committee',
+                'key'   => 'committee',
                 'desc'  => 'Review submissions and manage your assigned sections.',
             ],
         ];
@@ -401,8 +404,8 @@
 
                         <!-- Phones only: simple log-in buttons instead of the ID cards -->
                         <div class="access-mobile-login d-md-none">
-                            <a href="<?= base_url('login') ?>" class="btn-pill btn-pill-yellow">Log in as Student Council</a>
-                            <a href="<?= base_url('login') ?>" class="btn-pill btn-pill-outline">Log in as Committee</a>
+                            <a href="<?= base_url('login?role=council') ?>" class="btn-pill btn-pill-yellow">Log in as Student Council</a>
+                            <a href="<?= base_url('login?role=committee') ?>" class="btn-pill btn-pill-outline">Log in as Committee</a>
                         </div>
                     </div>
 
@@ -432,7 +435,7 @@
                                             <span class="badge-label">Access</span>
                                             <p class="badge-desc"><?= esc($b['desc']) ?></p>
                                             <span class="badge-barcode" aria-hidden="true"></span>
-                                            <a href="<?= base_url('login') ?>" class="badge-btn">Log in</a>
+                                            <a href="<?= base_url('login?role=' . $b['key']) ?>" class="badge-btn">Log in</a>
                                         </div>
                                     </div>
                                 </div>
@@ -500,6 +503,9 @@
 
     <!-- Icon chaff burst when a hero card is clicked -->
     <script src="<?= base_url('assets/js/chaff.js') ?>"></script>
+
+    <!-- Circle wipe into the Login / Register pages -->
+    <script src="<?= base_url('assets/js/page-transition.js') ?>"></script>
 
     <!-- Navbar: see-through at the top, white once the page is scrolled -->
     <script>
