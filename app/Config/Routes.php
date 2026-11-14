@@ -13,7 +13,16 @@ $routes->post('auth/register', 'Auth::attemptRegister');
 $routes->post('logout', 'Auth::logout');
 
 // Student side
-$routes->get('student', 'Student::index', ['filter' => 'auth']);
+// Student library: public, no login needed
+$routes->group('student', static function (RouteCollection $routes) {
+    $routes->get('/', 'Student::index');
+    $routes->get('search', 'Student::search');
+    $routes->get('folder/(:num)', 'Student::category/$1');
+    $routes->get('folder/(:num)/(:segment)', 'Student::yearLevel/$1/$2');
+    $routes->get('folder/(:num)/(:segment)/(:segment)', 'Student::subject/$1/$2/$3');
+    $routes->get('files/(:num)/view', 'Student::view/$1');
+    $routes->get('files/(:num)/download', 'Student::download/$1');
+});
 
 // Student Council (SC) side: Admin, Repository Manager, President, VP, Secretary, Technical Committee
 $routes->group('', ['filter' => 'auth:council'], static function (RouteCollection $routes) {

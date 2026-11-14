@@ -116,7 +116,7 @@
                                 <h6>Data Structures reviewer</h6>
                                 <small>Academic Reviewers · 2nd year</small>
                             </div>
-                            <a href="<?= base_url('login') ?>" class="resource-download" aria-label="Download">
+                            <a href="<?= $libraryUrl ?>" class="resource-download" aria-label="Download">
                                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/>
                                 </svg>
@@ -188,13 +188,13 @@
                     <p class="section-eyebrow">What's inside</p>
                     <h2 class="section-title">8 Repository for every year level</h2>
                 </div>
-                <a href="<?= base_url('login') ?>" class="btn-outline-pill">See all materials</a>
+                <a href="<?= $libraryUrl ?>" class="btn-outline-pill">See all materials</a>
             </div>
 
             <div class="row g-4" data-stagger="0.09" data-stagger-cols="4">
                 <?php foreach ($sections as $i => [$title, $desc, $theme, $icon]): ?>
                     <div class="col-sm-6 col-lg-3" data-anim="up" data-speed="<?= [0.03, 0.09, 0.15, 0.09][$i % 4] ?>">
-                        <a href="<?= base_url('login') ?>" class="folder folder-<?= $theme ?>">
+                        <a href="<?= esc($categoryUrls[$title] ?? $libraryUrl, 'attr') ?>" class="folder folder-<?= $theme ?>">
                             <span class="folder-back" aria-hidden="true"></span>
                             <span class="folder-paper" aria-hidden="true"></span>
                             <span class="folder-front">
@@ -229,8 +229,8 @@
                     </h2>
                     <p class="how-lead" data-anim="up" data-speed="0.1" style="--delay: 0.55s">Three simple steps from a search bar to a shelf full of reviewers. No account needed for students.</p>
                     <div class="d-flex flex-wrap gap-3" data-anim="up" data-speed="0.16" style="--delay: 0.7s">
-                        <a href="<?= base_url('login') ?>" class="btn-pill btn-pill-yellow">Start browsing</a>
-                        <a href="<?= base_url('login') ?>" class="btn-pill btn-pill-outline">Share your notes</a>
+                        <a href="<?= $libraryUrl ?>" class="btn-pill btn-pill-yellow">Start browsing</a>
+                        <a href="<?= esc($shareUrl, 'attr') ?>"<?= $shareIsForm ? ' target="_blank" rel="noopener"' : '' ?> class="btn-pill btn-pill-outline">Share your notes</a>
                     </div>
                 </div>
 
@@ -399,7 +399,7 @@
                         <p class="access-lead" data-speed="0.08">Officers and committee members log in to review submissions, approve materials and keep every section up to date.</p>
                         <div class="access-note" data-speed="0.16">
                             <span>Students do not need to log in.</span>
-                            <a href="#whats-inside">Go to the library</a>
+                            <a href="<?= $libraryUrl ?>">Go to the library</a>
                         </div>
 
                         <!-- Phones only: simple log-in buttons instead of the ID cards -->
@@ -481,7 +481,7 @@
                 <div class="col-lg-2" data-anim="up">
                     <h3 class="footer-heading">Share</h3>
                     <p class="footer-small">Have a handwritten reviewer that helped you?</p>
-                    <a href="<?= base_url('login') ?>" class="btn-pill btn-pill-yellow btn-pill-sm">Share your notes</a>
+                    <a href="<?= esc($shareUrl, 'attr') ?>"<?= $shareIsForm ? ' target="_blank" rel="noopener"' : '' ?> class="btn-pill btn-pill-yellow btn-pill-sm">Share your notes</a>
                 </div>
             </div>
 
