@@ -6,10 +6,10 @@ $queryFor = fn (string $state) => base_url('my-sections') . ($state === '' ? '' 
 
 // Stat cards double as quick status filters
 $cards = [
-    ''       => ['All files',      'fa-folder',       $stats['total'],  $stats['sections'] === null ? 'In your assigned sections' : 'Across ' . number_format($stats['sections']) . ' assigned sections'],
-    'active' => ['Active',         'fa-circle-check', $stats['active'], 'Published and working'],
-    'broken' => ['Broken links',   'fa-link-slash',   $stats['broken'], 'Links need to be fixed'],
-    'old'    => ['Old materials',  'fa-box-archive',  $stats['old'],    'To remove this semester'],
+    ''         => ['All files', 'fa-folder',            $stats['total'],    $stats['sections'] === null ? 'In every section' : 'Across ' . number_format($stats['sections']) . ' assigned sections'],
+    'active'   => ['Published', 'fa-circle-check',      $stats['active'],   'Live in the student library'],
+    'review'   => ['In review', 'fa-hourglass-half',    $stats['review'],   'With the Secretary, VP or President'],
+    'returned' => ['Returned',  'fa-rotate-left',       $stats['returned'], 'Sent back with remarks'],
 ];
 
 $sectionNames = array_column($assignedSections, 'name');
@@ -19,12 +19,17 @@ $sectionNames = array_column($assignedSections, 'name');
     <div>
         <h2 class="page-head-title">Materials in your sections</h2>
         <p class="page-head-sub">
-            <?= $stats['sections'] === null ? 'Only materials in your assigned sections are shown.' : 'Only materials in your ' . number_format($stats['sections']) . ' assigned sections are shown.' ?>
+            <?= $stats['sections'] === null ? 'Materials in every section are shown. Add new subjects here when you need them.' : 'Only materials in your ' . number_format($stats['sections']) . ' assigned sections are shown.' ?>
         </p>
     </div>
-    <button type="button" class="sc-btn" data-modal-open="uploadModal">
-        <i class="fa-solid fa-plus" aria-hidden="true"></i> Upload material
-    </button>
+    <div class="page-head-actions">
+        <button type="button" class="sc-btn sc-btn-outline" data-modal-open="addSubjectModal">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i> Add subject
+        </button>
+        <button type="button" class="sc-btn" data-modal-open="uploadModal">
+            <i class="fa-solid fa-upload" aria-hidden="true"></i> Upload material
+        </button>
+    </div>
 </div>
 
 <nav class="stat-row" aria-label="Filter by status">
@@ -42,8 +47,8 @@ $sectionNames = array_column($assignedSections, 'name');
     'yearLevels'   => $yearLevels,
     'fileTypes'    => $resourceTypes,
     'statuses'     => $states,
-    'fields'       => ['q', 'repository', 'year_level', 'file_type', 'status', 'sort'],
-    'labels'       => ['q' => 'Search', 'repository' => 'Section', 'year_level' => 'Year level', 'file_type' => 'Resource type', 'sort' => 'Sort by'],
+    'fields'       => ['q', 'repository', 'year_level', 'status', 'sort'],
+    'labels'       => ['q' => 'Search', 'repository' => 'Section', 'year_level' => 'Year level', 'sort' => 'Sort by'],
     'sorts'        => ['newest' => 'Newest first', 'oldest' => 'Oldest first', 'title' => 'Title (A–Z)'],
     'assigned'     => $sectionNames,
 ]) ?>
@@ -57,38 +62,29 @@ $sectionNames = array_column($assignedSections, 'name');
         <div class="table-wrap">
             <table class="sc-table">
                 <thead>
-                    <tr><th>File</th><th>Section</th><th>Year level</th><th>Type</th><th>Status</th><th>Action</th></tr>
+                    <tr><th>File</th><th>Section</th><th>Year level</th><th>Subject</th><th>Status</th><th>Action</th></tr>
                 </thead>
                 <tbody>
                     <?php if ($materials === []): ?>
-                        <tr><td colspan="6" class="empty-cell">No materials in your sections yet.</td></tr>
+                        <tr><td colspan="6" class="empty-cell">No materials here yet. Use “Upload material” to add one.</td></tr>
                     <?php endif; ?>
-                    <?php foreach ($materials as $m):
-                        $st = material_state($m['state']);
-                        $payload = [
-                            'id'          => (int) $m['id'],
-                            'title'       => $m['fileName'],
-                            'section'     => $m['section'],
-                            'sectionId'   => $m['sectionId'],
-                            'yearLevel'   => $m['yearLevel'],
-                            'yearLevelId' => $m['yearLevelId'],
-                            'type'        => $m['type'],
-                            'state'       => $m['state'],
-                            'stateLabel'  => $st['label'],
-                            'current'     => strtoupper($m['fileType']) . ' · ' . format_bytes($m['fileSize'] ?? null),
-                            'updateUrl'   => base_url('my-sections/' . (int) $m['id'] . '/update'),
-                            'deleteUrl'   => base_url('my-sections/' . (int) $m['id'] . '/delete'),
-                        ];
-                    ?>
+                    <?php foreach ($materials as $m): $st = review_pill($m['status']); ?>
                         <tr>
-                            <td><span class="file-name"><i class="fa-regular fa-file" aria-hidden="true"></i><?= esc($m['fileName']) ?></span></td>
+                            <td>
+                                <span class="file-name"><i class="fa-regular <?= $m['fileType'] === 'link' ? 'fa-link' : 'fa-file' ?>" aria-hidden="true"></i><?= esc($m['title']) ?></span>
+                                <?php if ($m['mine']): ?><span class="muted"> · uploaded by you</span><?php endif; ?>
+                            </td>
                             <td><?= esc($m['section']) ?></td>
                             <td><?= esc($m['yearLevel']) ?></td>
-                            <td><?= esc($m['type']) ?></td>
-                            <td><span class="pill <?= $st['class'] ?>"><?= $st['label'] ?></span></td>
+                            <td><?= esc($m['subject']) ?></td>
                             <td>
-                                <button type="button" class="sc-btn sc-btn-outline sc-btn-xs" data-modal-open="editModal"
-                                        data-payload="<?= esc(json_encode($payload), 'attr') ?>">Edit</button>
+                                <span class="pill <?= $st['class'] ?>"><?= esc($st['label']) ?></span>
+                                <?php if ($st['label'] === 'Returned' && $m['returnNote']): ?>
+                                    <p class="small-line muted return-note"><?= esc($m['returnNote']) ?></p>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <a href="<?= esc($m['fileUrl'], 'attr') ?>" class="sc-btn sc-btn-outline sc-btn-xs" target="_blank" rel="noopener">View</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -127,19 +123,34 @@ $sectionNames = array_column($assignedSections, 'name');
             </a>
         </section>
 
-        <!-- Assigned to you -->
+        <!-- Library structure: sections, year levels, subjects -->
         <section class="sc-card panel">
-            <h2 class="panel-title">Assigned to you</h2>
-            <p class="panel-sub">Your repository responsibilities</p>
+            <h2 class="panel-title">Sections</h2>
+            <p class="panel-sub">The folders students browse in the library</p>
             <?php if ($assignedSections === []): ?>
-                <p class="empty-state empty-sm">No sections are assigned to you yet.</p>
+                <p class="empty-state empty-sm">The sections have not been set up yet. Run <code>php spark db:seed LibraryStructureSeeder</code>.</p>
             <?php else: ?>
                 <ul class="line-list">
                     <?php foreach ($assignedSections as $s): ?>
-                        <li><div><strong><?= esc($s['name']) ?></strong><span><?= (int) $s['files'] ?> files</span></div></li>
+                        <li><div><strong><?= esc($s['name']) ?></strong><span><?= (int) $s['files'] ?> <?= (int) $s['files'] === 1 ? 'file' : 'files' ?></span></div></li>
                     <?php endforeach; ?>
                 </ul>
             <?php endif; ?>
+        </section>
+
+        <section class="sc-card panel">
+            <h2 class="panel-title">Subjects</h2>
+            <p class="panel-sub">Folders inside each year level (1st–4th year)</p>
+            <?php if ($subjects === []): ?>
+                <p class="empty-state empty-sm">No subjects yet. Files without one go to “General”.</p>
+            <?php else: ?>
+                <p class="chip-row">
+                    <?php foreach ($subjects as $s): ?><span class="chip"><?= esc($s['name']) ?></span><?php endforeach; ?>
+                </p>
+            <?php endif; ?>
+            <button type="button" class="sc-btn sc-btn-outline sc-btn-sm side-link" data-modal-open="addSubjectModal">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i> Add subject
+            </button>
         </section>
     </div>
 </div>
@@ -150,10 +161,14 @@ $sectionNames = array_column($assignedSections, 'name');
 <?php
 $sectionOptions = fn (string $placeholder) => '<option value="">' . $placeholder . '</option>' . implode('', array_map(
     fn ($r) => '<option value="' . esc($r['id']) . '">' . esc($r['name']) . '</option>', $repositories));
-$yearOptions = '<option value="">Choose year level</option>' . implode('', array_map(
+$yearOptions = '<option value="">All years (not year-specific)</option>' . implode('', array_map(
     fn ($y) => '<option value="' . esc($y['id']) . '">' . esc($y['name']) . '</option>', $yearLevels));
 $typeOptions = '<option value="">Choose type</option>' . implode('', array_map(
     fn ($t) => '<option value="' . esc($t) . '">' . esc($t) . '</option>', $resourceTypes));
+$subjectOptions = '<option value="">General (no subject)</option>' . implode('', array_map(
+    fn ($s) => '<option value="' . esc($s['id']) . '">' . esc($s['name']) . '</option>', $subjects));
+$acceptExt = implode(',', array_map(fn ($e) => '.' . $e, $allowedExt));
+$extLabel  = strtoupper(implode(', ', $allowedExt)) . ' · max ' . $maxMb . ' MB';
 ?>
 
 <!-- Upload material -->
@@ -163,7 +178,7 @@ $typeOptions = '<option value="">Choose type</option>' . implode('', array_map(
         <div class="modal-head">
             <div>
                 <h2 id="uploadTitle">Upload material</h2>
-                <p class="modal-sub">Add a material to one of your assigned sections.</p>
+                <p class="modal-sub">Add a checked material. It goes to the Secretary, then the Vice President, then the President before students can see it.</p>
             </div>
             <button type="button" class="modal-x" data-modal-close aria-label="Close"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
         </div>
@@ -175,12 +190,12 @@ $typeOptions = '<option value="">Choose type</option>' . implode('', array_map(
                     <i class="fa-regular fa-file" aria-hidden="true"></i>
                     <div>
                         <strong data-pick="name">No file chosen</strong>
-                        <span data-pick="meta">PDF, DOCX or image</span>
+                        <span data-pick="meta" data-pick-default="<?= esc($extLabel, 'attr') ?>"><?= esc($extLabel) ?></span>
                     </div>
                     <label class="sc-btn sc-btn-outline sc-btn-sm">
                         Choose file
-                        <input type="file" name="file" class="visually-hidden" required
-                               accept=".pdf,.doc,.docx,.ppt,.pptx,.png,.jpg,.jpeg" data-pick-input data-fill-title="uploadTitleInput">
+                        <input type="file" name="file" class="visually-hidden"
+                               accept="<?= esc($acceptExt, 'attr') ?>" data-pick-input data-fill-title="uploadTitleInput">
                     </label>
                 </div>
             </div>
@@ -193,6 +208,9 @@ $typeOptions = '<option value="">Choose type</option>' . implode('', array_map(
             <div class="form-field">
                 <label for="uploadSection">Section</label>
                 <select id="uploadSection" name="section_id" required><?= $sectionOptions('Choose section') ?></select>
+                <?php if ($repositories === []): ?>
+                    <p class="note note-warn"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>The sections have not been set up yet. Ask the admin to run the library seeder.</p>
+                <?php endif; ?>
             </div>
 
             <div class="form-row">
@@ -201,20 +219,51 @@ $typeOptions = '<option value="">Choose type</option>' . implode('', array_map(
                     <select id="uploadYear" name="year_level_id"><?= $yearOptions ?></select>
                 </div>
                 <div class="form-field">
-                    <label for="uploadType">Resource type</label>
-                    <select id="uploadType" name="resource_type"><?= $typeOptions ?></select>
+                    <label for="uploadSubject">Subject</label>
+                    <select id="uploadSubject" name="subject_id"><?= $subjectOptions ?></select>
                 </div>
             </div>
 
             <div class="form-field">
-                <label for="uploadLink">Download link</label>
-                <input type="url" id="uploadLink" name="link" placeholder="https://">
+                <label for="uploadLink">Google Drive link <span class="muted">(optional)</span></label>
+                <input type="url" id="uploadLink" name="link" placeholder="https://drive.google.com/…" maxlength="500">
+                <span class="muted field-help">Only needed if you are not choosing a file above.</span>
             </div>
         </div>
 
         <div class="modal-foot">
             <button type="button" class="sc-btn sc-btn-outline" data-modal-close>Cancel</button>
             <button type="submit" class="sc-btn">Upload material</button>
+        </div>
+    </form>
+</dialog>
+
+<!-- Add subject -->
+<dialog class="sc-modal" id="addSubjectModal" aria-labelledby="addSubjectTitle">
+    <form method="post" action="<?= base_url('my-sections/subjects') ?>">
+        <?= csrf_field() ?>
+        <div class="modal-head">
+            <div>
+                <h2 id="addSubjectTitle">Add subject</h2>
+                <p class="modal-sub">Folders inside a year level, e.g. “Data Structures”.</p>
+            </div>
+            <button type="button" class="modal-x" data-modal-close aria-label="Close"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="subjectCode">Code <span class="muted">(optional)</span></label>
+                    <input type="text" id="subjectCode" name="code" maxlength="50" placeholder="e.g. IT 211">
+                </div>
+                <div class="form-field">
+                    <label for="subjectName">Subject name</label>
+                    <input type="text" id="subjectName" name="name" required maxlength="150" placeholder="e.g. Data Structures">
+                </div>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button type="button" class="sc-btn sc-btn-outline" data-modal-close>Cancel</button>
+            <button type="submit" class="sc-btn">Add subject</button>
         </div>
     </form>
 </dialog>

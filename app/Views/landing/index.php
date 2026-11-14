@@ -21,6 +21,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= base_url('assets/css/landing_index.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/page-transition.css') ?>">
 
     <!-- Turn the intro on before the page draws (skipped if the visitor prefers less motion) -->
     <script>

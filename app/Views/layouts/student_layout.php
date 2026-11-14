@@ -20,10 +20,45 @@ $formAttrs = $notesFormUrl !== ''
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="<?= base_url('assets/css/flash.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/student.css') ?>">
+
+    <!-- Arriving from the landing page's cursor "click": reveal this page in a circle from the click point
+         (same as login.php). Modern browsers draw it over the previous page (view transition);
+         older browsers reveal this page on its own. -->
+    <script>
+        (function () {
+            let saved = null;
+            try {
+                saved = JSON.parse(sessionStorage.getItem('nexusWipe') || 'null');
+                sessionStorage.removeItem('nexusWipe');
+            } catch (e) { /* storage blocked */ }
+
+            const root = document.documentElement;
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const useCircle = saved && !reduce;
+
+            if (useCircle) {
+                root.style.setProperty('--wx', (saved.x * window.innerWidth) + 'px');
+                root.style.setProperty('--wy', (saved.y * window.innerHeight) + 'px');
+            }
+
+            if ('CSSViewTransitionRule' in window) {
+                window.addEventListener('pagereveal', e => {
+                    if (e.viewTransition) {
+                        if (useCircle) root.classList.add('vt-wipe');
+                        else e.viewTransition.skipTransition(); // moving around the library: no animation
+                    } else if (useCircle) {
+                        root.classList.add('wipe-in');
+                    }
+                });
+            } else if (useCircle) {
+                root.classList.add('wipe-in');
+            }
+        })();
+    </script>
 </head>
 <body class="lib">
     <?= view('partials/flash') ?>
@@ -45,7 +80,7 @@ $formAttrs = $notesFormUrl !== ''
                    placeholder="Search all notes and files" aria-label="Search all notes and files">
         </form>
 
-        <a class="lib-btn lib-btn-primary lib-share" <?= $formAttrs ?>>
+        <a class="lib-btn lib-btn-accent lib-share" <?= $formAttrs ?>>
             <span>Share your notes</span>
             <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
         </a>
@@ -104,7 +139,7 @@ $formAttrs = $notesFormUrl !== ''
             <div class="lib-share-card">
                 <p class="lib-share-title">Have notes to share?</p>
                 <p>Send your handwritten notes through our Google Form. The Council checks them before they are added here.</p>
-                <a class="lib-btn lib-btn-primary lib-btn-block" <?= $formAttrs ?>>Open Google Form</a>
+                <a class="lib-btn lib-btn-accent lib-btn-block" <?= $formAttrs ?>>Open Google Form</a>
             </div>
         </aside>
         <div class="lib-scrim" hidden></div>

@@ -1,0 +1,44 @@
+/* =========================================================
+   Landing page → Student library: cursor "click" intro.
+   A cursor drops from the top of the screen to the centre and clicks,
+   then the library opens in a circle from that point (see page-transition.js).
+   ========================================================= */
+.nx-cursor-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    pointer-events: none;
+    background: rgba(12, 51, 71, 0);
+    transition: background-color 0.5s ease;
+}
+.nx-cursor-layer.is-dim { background: rgba(12, 51, 71, 0.18); }
+
+/* The arrow; its tip sits exactly on the layer's (--x, --y) point */
+.nx-cursor {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 34px;
+    height: 34px;
+    transform-origin: 3px 2px; /* tip of the arrow */
+    filter: drop-shadow(0 6px 10px rgba(12, 51, 71, 0.35));
+    will-change: transform;
+}
+.nx-cursor svg { display: block; width: 100%; height: 100%; margin: -2px 0 0 -3px; }
+
+/* Click rings, centred on the tip */
+.nx-ring {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border-radius: 50%;
+    border: 3px solid #f6b434;
+    opacity: 0;
+}
+.nx-ring-fill {
+    border: 0;
+    background: rgba(246, 180, 52, 0.45);
+}

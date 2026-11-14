@@ -37,6 +37,18 @@ class MaterialModel extends Model
         'size'   => ['Largest',  'm.file_size DESC'],
     ];
 
+    /**
+     * ORDER BY for sections: the 8 landing-page sections in their landing order (Config\Nexus::$sections),
+     * then any other section by id.
+     */
+    private function sectionOrder(string $nameColumn): string
+    {
+        $names = implode(', ', array_map(fn ($n) => $this->db->escape($n), array_keys(config('Nexus')->sections)));
+        $idColumn = str_replace('category_name', 'category_id', $nameColumn);
+
+        return "FIELD({$nameColumn}, {$names}) = 0, FIELD({$nameColumn}, {$names}), {$idColumn}";
+    }
+
     /** Base query: published materials with their category / year level / subject names. */
     private function published(): BaseBuilder
     {
@@ -80,7 +92,7 @@ class MaterialModel extends Model
         $counts = array_column($counts, null, 'category_id');
 
         $categories = $this->db->table('categories')
-            ->orderBy('category_id')
+            ->orderBy($this->sectionOrder('category_name'), '', false)
             ->get()->getResultArray();
 
         return array_map(static fn (array $c) => [
@@ -90,6 +102,62 @@ class MaterialModel extends Model
             'files'       => (int) ($counts[$c['category_id']]['files'] ?? 0),
             'folders'     => (int) ($counts[$c['category_id']]['folders'] ?? 0),
         ], $categories);
+    }
+
+    /**
+     * Dropdown options for forms and filters.
+     *
+     * @return array{repositories: list<array{id:int,name:string}>, yearLevels: list<array{id:int,name:string}>, subjects: list<array{id:int,name:string}>}
+     */
+    public function options(): array
+    {
+        $map = static fn (array $rows, string $id, string $name, ?string $code = null) => array_map(
+            static fn (array $r) => [
+                'id'   => (int) $r[$id],
+                'name' => ($code !== null && $r[$code] ? $r[$code] . ' · ' : '') . $r[$name],
+            ],
+            $rows
+        );
+
+        return [
+            'repositories' => $map($this->db->table('categories')->orderBy($this->sectionOrder('category_name'), '', false)->get()->getResultArray(), 'category_id', 'category_name'),
+            'yearLevels'   => $map($this->db->table('year_levels')->orderBy('year_level_id')->get()->getResultArray(), 'year_level_id', 'year_level_name'),
+            'subjects'     => $map($this->db->table('subjects')->orderBy('subject_name')->get()->getResultArray(), 'subject_id', 'subject_name', 'subject_code'),
+        ];
+    }
+
+    /**
+     * Sections (categories) with how many materials each has, for the committee "Sections" panel.
+     *
+     * @return list<array{id: int, name: string, files: int}>
+     */
+    public function sectionsWithCounts(): array
+    {
+        $rows = $this->db->table('categories c')
+            ->select('c.category_id, c.category_name, COUNT(m.material_id) AS files')
+            ->join('materials m', 'm.category_id = c.category_id', 'left')
+            ->groupBy('c.category_id, c.category_name')
+            ->orderBy($this->sectionOrder('c.category_name'), '', false)
+            ->get()->getResultArray();
+
+        return array_map(static fn (array $r) => [
+            'id' => (int) $r['category_id'], 'name' => $r['category_name'], 'files' => (int) $r['files'],
+        ], $rows);
+    }
+
+    /**
+     * Adds a section, year level or subject.
+     *
+     * @param 'categories'|'year_levels'|'subjects' $table
+     * @return int|false New id
+     */
+    public function addFolder(string $table, array $data)
+    {
+        if (! in_array($table, ['categories', 'year_levels', 'subjects'], true)) {
+            return false;
+        }
+
+        return $this->db->table($table)->insert($data) ? (int) $this->db->insertID() : false;
     }
 
     public function findCategory(int $id): ?array

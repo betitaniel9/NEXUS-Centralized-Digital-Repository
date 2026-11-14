@@ -1,34 +1,43 @@
 /* =========================================================
    NEXUS · Student library
    ========================================================= */
+/* Colours match the landing page (landing_index.css) */
 :root {
-    --primary: #17698f;
-    --primary-dark: #115473;
-    --primary-soft: #e3eef4;
-    --text: #102733;
-    --muted: #5d6d77;
-    --line: #e2e8ed;
-    --bg: #f2f6f9;
-    --side: #f8fafc;
+    --navy: #0C3347;
+    --primary: #0e4a66;       /* landing teal-navy */
+    --primary-dark: #0b3a50;
+    --primary-mid: #1d5f80;   /* landing link / eyebrow blue */
+    --primary-soft: #e3eef5;
+    --accent: #f6b434;        /* landing yellow pill */
+    --accent-hover: #ffc451;
+    --accent-soft: #fdf0c8;
+    --accent-ink: #8a6200;
+    --text: #12202b;
+    --muted: #5f6b76;
+    --line: #e3e9ee;
+    --bg: #f1f5f9;
+    --dot: #d5dee6;
+    --side: #ffffff;
     --card: #ffffff;
-    --mark: #fff1b8;
+    --mark: #fdf0c8;
 
     --top-h: 64px;
     --side-w: 248px;
     --radius: 12px;
-    --shadow: 0 1px 2px rgba(16, 39, 51, 0.05), 0 2px 8px rgba(16, 39, 51, 0.04);
-    --shadow-lift: 0 6px 20px rgba(16, 39, 51, 0.10);
+    --shadow: 0 1px 2px rgba(18, 32, 43, 0.05), 0 2px 8px rgba(18, 32, 43, 0.04);
+    --shadow-lift: 0 8px 22px rgba(14, 74, 102, 0.14);
 }
 
-/* Folder colours (main / light), one per category */
-.c1 { --f: #3a8cc0; --f-soft: #cde5f3; }
-.c2 { --f: #1f9686; --f-soft: #c4ebe4; }
-.c3 { --f: #7a6dd3; --f-soft: #ddd8f7; }
-.c4 { --f: #d29a25; --f-soft: #f8e2ad; }
-.c5 { --f: #47984d; --f-soft: #d0ebcd; }
-.c6 { --f: #dc6b4a; --f-soft: #f8d2c5; }
-.c7 { --f: #5c7383; --f-soft: #d5dee4; }
-.c8 { --f: #c9578e; --f-soft: #f6d1e2; }
+/* Folder colours, same order + values as the landing page folders:
+   --f = ink (folder tab, badge text), --f-soft = tint (folder front), --f-bg = icon background */
+.c1 { --f: #1d5f80; --f-soft: #cfe3ef; --f-bg: #e3eef5; } /* blue   */
+.c2 { --f: #1f7a5a; --f-soft: #c7eadb; --f-bg: #e0f3ec; } /* green  */
+.c3 { --f: #5b4a9e; --f-soft: #ddd5f3; --f-bg: #ece8f8; } /* purple */
+.c4 { --f: #8a6200; --f-soft: #f8e2a8; --f-bg: #fdf0c8; } /* yellow */
+.c5 { --f: #3f7a1f; --f-soft: #d3e9c4; --f-bg: #e6f2dc; } /* lime   */
+.c6 { --f: #b0402f; --f-soft: #f6cfc9; --f-bg: #fbe3df; } /* red    */
+.c7 { --f: #45535f; --f-soft: #d5dce3; --f-bg: #e6ebef; } /* slate  */
+.c8 { --f: #a03a6a; --f-soft: #f3d0e0; --f-bg: #f9e4ee; } /* pink   */
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -37,7 +46,7 @@ body.lib {
     min-height: 100vh;
     background: var(--bg);
     color: var(--text);
-    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
     font-size: 14px;
     line-height: 1.45;
 }
@@ -86,6 +95,9 @@ body.lib {
 
 .lib-btn-primary { background: var(--primary); color: #fff !important; }
 .lib-btn-primary:hover { background: var(--primary-dark); }
+
+.lib-btn-accent { background: var(--accent); color: var(--text) !important; }
+.lib-btn-accent:hover { background: var(--accent-hover); }
 
 .lib-btn-outline { background: #fff; border-color: var(--line); }
 .lib-btn-outline:hover { border-color: var(--primary); color: var(--primary); }
@@ -137,7 +149,7 @@ body.lib {
 }
 .lib-brand img { width: 36px; height: 36px; object-fit: contain; }
 .lib-brand span { display: flex; flex-direction: column; line-height: 1.15; }
-.lib-brand strong { font-size: 15px; font-weight: 700; }
+.lib-brand strong { font-size: 15px; font-weight: 700; color: var(--navy); }
 .lib-brand small { font-size: 11px; color: var(--muted); }
 
 .lib-search {
@@ -185,7 +197,7 @@ body.lib {
     font-size: 13px;
     cursor: pointer;
 }
-.lib-avatar:hover { background: #d3e5ee; }
+.lib-avatar:hover { background: #cfe3ef; }
 
 .lib-user-menu {
     position: absolute;
@@ -265,8 +277,8 @@ body.lib {
     color: var(--text);
     transition: background-color .15s;
 }
-.lib-side-item:hover { background: #edf2f6; }
-.lib-side-item.active { background: var(--primary-soft); font-weight: 600; color: var(--primary-dark); }
+.lib-side-item:hover { background: var(--bg); }
+.lib-side-item.active { background: var(--primary-soft); font-weight: 600; color: var(--primary); box-shadow: inset 3px 0 0 var(--accent); }
 
 .lib-side-all i { width: 18px; text-align: center; color: var(--muted); }
 .lib-side-all.active i { color: var(--primary); }
@@ -278,11 +290,11 @@ body.lib {
 .lib-share-card {
     margin-top: auto;
     padding: 14px;
-    border: 1px solid #f3dfb2;
+    border: 1px solid #f3dc9a;
     border-radius: var(--radius);
-    background: #fdf5e4;
+    background: var(--accent-soft);
     font-size: 12.5px;
-    color: #6b5420;
+    color: var(--accent-ink);
 }
 .lib-share-card p { margin-bottom: 12px; }
 .lib-share-title { font-weight: 700; font-size: 13.5px; color: var(--text); margin-bottom: 6px !important; }
@@ -299,6 +311,9 @@ body.lib {
    Main area
    --------------------------------------------------------- */
 .lib-main {
+    background-color: var(--bg);
+    background-image: radial-gradient(circle, var(--dot) 1.1px, transparent 1.7px); /* landing dot grid */
+    background-size: 22px 22px;
     flex: 1;
     min-width: 0;
     padding: 22px 28px 40px;
@@ -393,7 +408,7 @@ body.lib {
    Folder icon + folder cards
    --------------------------------------------------------- */
 .folder-ico { display: block; width: 48px; height: 38px; flex-shrink: 0; }
-.folder-back { fill: var(--f, #5c7383); }
+.folder-back { fill: var(--f, #45535f); fill: color-mix(in srgb, var(--f, #45535f) 55%, var(--f-soft, #d5dce3)); }
 .folder-front { fill: var(--f-soft, #d5dee4); }
 .folder-ico-sm { width: 18px; height: 15px; }
 
@@ -430,8 +445,8 @@ body.lib {
     width: 36px;
     height: 36px;
     border-radius: 8px;
-    background: var(--f-soft, #e3eef4);
-    color: color-mix(in srgb, var(--f, #17698f) 70%, #000);
+    background: var(--f-bg, var(--primary-soft));
+    color: var(--f, var(--primary));
     font-size: 9.5px;
     font-weight: 700;
     letter-spacing: .02em;
@@ -439,7 +454,7 @@ body.lib {
 
 .file-title { display: block; font-weight: 600; overflow-wrap: anywhere; }
 .file-title mark { background: var(--mark); color: inherit; border-radius: 3px; padding: 0 1px; }
-.file-path { display: block; margin-top: 1px; font-size: 11.5px; color: var(--primary); }
+.file-path { display: block; margin-top: 1px; font-size: 11.5px; color: var(--primary-mid); }
 .file-type, .file-size { font-size: 12.5px; color: var(--muted); }
 
 .file-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
@@ -479,7 +494,7 @@ body.lib {
 .files.is-list .files-head {
     padding-top: 9px;
     padding-bottom: 9px;
-    background: #f8fafc;
+    background: #f7fafc;
     border-bottom: 1px solid var(--line);
     font-size: 11.5px;
     font-weight: 600;
@@ -487,7 +502,7 @@ body.lib {
 }
 
 .files.is-list .file + .file { border-top: 1px solid var(--line); }
-.files.is-list .file:hover { background: #fafcfd; }
+.files.is-list .file:hover { background: #f7fafc; }
 
 /* Grid layout */
 .files.is-grid .files-head { display: none; }
@@ -633,4 +648,60 @@ body.lib {
 
 @media (prefers-reduced-motion: reduce) {
     .lib *, .lib *::before, .lib *::after { transition: none !important; }
+}
+
+/* ---------------------------------------------------------
+   Arrival from the landing page: circle reveal from the cursor's click point
+   (same effect as login.css; --wx / --wy are set by the <head> script in student_layout.php)
+   --------------------------------------------------------- */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root) {
+    animation: none;
+}
+
+html.vt-wipe::view-transition-new(root) {
+    animation: lib-vt-reveal 0.75s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+@keyframes lib-vt-reveal {
+    from { clip-path: circle(0px at var(--wx, 50%) var(--wy, 50%)); }
+    to   { clip-path: circle(150vmax at var(--wx, 50%) var(--wy, 50%)); }
+}
+
+/* Older browsers: the page reveals itself */
+html.wipe-in body {
+    animation: lib-wipe-reveal 0.9s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+}
+
+@keyframes lib-wipe-reveal {
+    from { clip-path: circle(0% at var(--wx, 50%) var(--wy, 50%)); }
+    to   { clip-path: circle(150% at var(--wx, 50%) var(--wy, 50%)); }
+}
+
+/* Content settles in as the circle opens */
+html.vt-wipe .lib-head,
+html.vt-wipe .folder-grid,
+html.vt-wipe .files,
+html.wipe-in .lib-head,
+html.wipe-in .folder-grid,
+html.wipe-in .files {
+    animation: lib-settle 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+}
+html.vt-wipe .folder-grid, html.wipe-in .folder-grid,
+html.vt-wipe .files, html.wipe-in .files { animation-delay: 0.25s; }
+
+@keyframes lib-settle {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+        animation: none !important;
+    }
 }

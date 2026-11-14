@@ -1048,6 +1048,14 @@ body.sc {
     padding: 0 10px 10px;
 }
 
+.approval-actions .approval-view { grid-column: 1 / -1; }
+.file-stage {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    font-size: 9px;
+}
+
 /* ---------------------------------------------------------
    Responsive
    --------------------------------------------------------- */

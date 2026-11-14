@@ -317,7 +317,7 @@
             $('[data-pick="name"]', box).textContent = file ? file.name : 'No file chosen';
             $('[data-pick="meta"]', box).textContent = file
                 ? (file.name.split('.').pop() || '').toUpperCase() + ' · ' + formatSize(file.size) + ' · Ready to upload'
-                : 'PDF, DOCX or image';
+                : ($('[data-pick="meta"]', box).dataset.pickDefault || 'PDF, DOCX or image');
 
             const title = document.getElementById(input.dataset.fillTitle);
             if (file && title && !title.value) title.value = file.name.replace(/\.[^.]+$/, '');
@@ -330,7 +330,8 @@
         uploadModal.addEventListener('modal:open', () => {
             $('form', uploadModal).reset();
             $('[data-pick="name"]', uploadModal).textContent = 'No file chosen';
-            $('[data-pick="meta"]', uploadModal).textContent = 'PDF, DOCX or image';
+            const meta = $('[data-pick="meta"]', uploadModal);
+            meta.textContent = meta.dataset.pickDefault || 'PDF, DOCX or image';
         });
     }
 

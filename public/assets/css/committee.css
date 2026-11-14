@@ -945,3 +945,51 @@ dialog.modal-xl {
     dialog.sc-modal[open] { animation: none; }
     .stat-link { transition: none; }
 }
+
+/* Remarks under a "Returned" pill (My sections) */
+.return-note {
+    max-width: 260px;
+    margin-top: 4px !important;
+    white-space: normal;
+}
+
+/* My sections: add buttons + year level / subject chips */
+.page-head-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.folder-group-label {
+    margin: 12px 0 6px !important;
+}
+
+.chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.chip-row .chip {
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--panel-gray);
+    font-size: 11px;
+}
+
+.folder-add-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.field-help {
+    font-size: 11px;
+}
+
+@media (max-width: 700px) {
+    .page-head { flex-direction: column; align-items: stretch; }
+    .page-head-actions { justify-content: flex-start; }
+}

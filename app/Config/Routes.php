@@ -30,6 +30,9 @@ $routes->group('', ['filter' => 'auth:council'], static function (RouteCollectio
     $routes->get('dashboard', 'Dashboard::index');
     $routes->get('submissions', 'Submissions::index');
     $routes->get('approval', 'Approvals::index');
+    $routes->post('approval/(:num)/approve', 'Approvals::approve/$1');
+    $routes->post('approval/(:num)/return', 'Approvals::returnFile/$1');
+    $routes->get('council/files/(:num)', 'Approvals::file/$1'); // any material, published or not
     $routes->get('repository', 'Materials::index');
 });
 
@@ -41,6 +44,7 @@ $routes->group('', ['filter' => 'auth:committee'], static function (RouteCollect
 
     $routes->get('my-sections', 'Committee::sections');
     $routes->post('my-sections/upload', 'Committee::upload');
+    $routes->post('my-sections/subjects', 'Committee::addSubject'); // sections + year levels are fixed (Config\Nexus)
     $routes->post('my-sections/(:num)/update', 'Committee::update/$1');
     $routes->post('my-sections/(:num)/delete', 'Committee::delete/$1');
 

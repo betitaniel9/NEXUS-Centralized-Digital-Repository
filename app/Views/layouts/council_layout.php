@@ -5,6 +5,8 @@
  * Optional: $workspaceTerm (committee sidebar footer, e.g. '1st semester · AY 2026–2027').
  */
 $isCommittee = $roleName === 'Technical Committee';
+// committee.css also holds the shared dialog / form styles; pages with pop-ups pass 'useModals' => true
+$needsModalCss = $isCommittee || ! empty($useModals);
 
 // Technical Committee has its own workspace; every other SC role shares the approval pages.
 $nav = $isCommittee
@@ -37,7 +39,7 @@ $roleLabel = strtoupper($isCommittee ? 'Committee' : $roleName);
 
     <link rel="stylesheet" href="<?= base_url('assets/css/flash.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/css/council.css') ?>">
-    <?php if ($isCommittee): ?>
+    <?php if ($needsModalCss): ?>
         <link rel="stylesheet" href="<?= base_url('assets/css/committee.css') ?>">
     <?php endif; ?>
 </head>

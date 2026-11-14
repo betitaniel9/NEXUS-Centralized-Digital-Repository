@@ -2,10 +2,10 @@
 
 namespace App\Controllers;
 
+use App\Libraries\MaterialFiles;
 use App\Models\MaterialModel;
 use App\Models\UserModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
-use CodeIgniter\HTTP\ResponseInterface;
 
 /**
  * Student library: browse published materials by Category → Year level → Subject,
@@ -16,16 +16,6 @@ use CodeIgniter\HTTP\ResponseInterface;
 class Student extends BaseController
 {
     protected $helpers = ['council', 'student'];
-
-    /** Extensions that may be shown inside the page (everything else is downloaded). */
-    private const INLINE_TYPES = [
-        'pdf'  => 'pdf',
-        'png'  => 'image',
-        'jpg'  => 'image',
-        'jpeg' => 'image',
-        'gif'  => 'image',
-        'webp' => 'image',
-    ];
 
     private MaterialModel $materials;
 
@@ -51,7 +41,7 @@ class Student extends BaseController
                 'url'   => base_url('student/folder/' . $c['id']),
                 'name'  => $c['name'],
                 'meta'  => $this->countLabel($c['files'], 'file') . ' · ' . $this->countLabel($c['folders'], 'folder'),
-                'color' => $this->color($c['id']),
+                'color' => $this->color($c['id'], $c['name']),
             ], $categories),
             'emptyText'   => 'There are no sections in the library yet.',
         ], $categories);
@@ -74,7 +64,7 @@ class Student extends BaseController
                 'url'   => base_url($base . ($y['id'] ?: 'all')),
                 'name'  => $y['name'] ?? 'All years',
                 'meta'  => $this->countLabel($y['files'], 'file') . ' · ' . $this->countLabel($y['folders'], 'folder'),
-                'color' => $this->color($categoryId),
+                'color' => $this->color($categoryId, $category['category_name']),
             ], $this->materials->yearFolders($categoryId)),
             'emptyText' => 'Nothing has been published in this section yet.',
         ], $categories);
@@ -101,7 +91,7 @@ class Student extends BaseController
                 'url'   => base_url($base . ($s['id'] ?: 'general')),
                 'name'  => $s['name'] ?? 'General',
                 'meta'  => ($s['code'] ? $s['code'] . ' · ' : '') . $this->countLabel($s['files'], 'file'),
-                'color' => $this->color($categoryId),
+                'color' => $this->color($categoryId, $category['category_name']),
             ], $this->materials->subjectFolders($categoryId, $yearId)),
             'emptyText' => 'Nothing has been published for this year level yet.',
         ], $categories);
@@ -164,27 +154,13 @@ class Student extends BaseController
     /** Shows a PDF / image inside the preview pop-up. Other types are downloaded instead. */
     public function view(int $id)
     {
-        $file = $this->fileOr404($id);
-
-        if ($this->externalUrl($file) !== null) {
-            return redirect()->to($this->externalUrl($file));
-        }
-
         // Only PDFs and images are shown in the page; anything else (e.g. HTML) is always downloaded.
-        $inline = isset(self::INLINE_TYPES[$this->extension($file)]);
-
-        return $this->sendFile($file, $this->localPathOr404($file), $inline);
+        return MaterialFiles::respond($this->response, $this->fileOr404($id), true);
     }
 
     public function download(int $id)
     {
-        $file = $this->fileOr404($id);
-
-        if ($this->externalUrl($file) !== null) {
-            return redirect()->to($this->externalUrl($file));
-        }
-
-        return $this->sendFile($file, $this->localPathOr404($file), false);
+        return MaterialFiles::respond($this->response, $this->fileOr404($id), false);
     }
 
     // ---------------------------------------------------------------- helpers
@@ -194,7 +170,7 @@ class Student extends BaseController
         $roles = session()->get('roles') ?? [];
 
         return view($view, $data + [
-            'categories'   => array_map(fn (array $c) => $c + ['color' => $this->color($c['id'])], $categories),
+            'categories'   => array_map(fn (array $c) => $c + ['color' => $this->color($c['id'], $c['name'])], $categories),
             'searchQuery'  => $data['q'] ?? '',
             'notesFormUrl' => config('Nexus')->notesFormUrl,
             'isLoggedIn'   => (bool) session()->get('isLoggedIn'),
@@ -211,8 +187,9 @@ class Student extends BaseController
     {
         $year    = $f['year_level_name'] ?? 'All years';
         $subject = $f['subject_name'] ?? 'General';
-        $ext     = $this->extension($f);
-        $isLink  = $this->externalUrl($f) !== null;
+        $ext     = MaterialFiles::extension($f);
+        $preview = MaterialFiles::previewKind($f);
+        $isLink  = $preview === 'link';
 
         return [
             'id'       => (int) $f['material_id'],
@@ -223,8 +200,8 @@ class Student extends BaseController
             'typeName' => $isLink ? 'Link' : $this->typeName($ext),
             'size'     => $isLink ? '—' : format_bytes((int) $f['file_size']),
             'added'    => $f['created_at'] ? date('M j, Y', strtotime($f['created_at'])) : '—',
-            'color'    => $this->color((int) $f['category_id']),
-            'preview'  => $isLink ? 'link' : (self::INLINE_TYPES[$ext] ?? 'none'),
+            'color'    => $this->color((int) $f['category_id'], $f['category_name']),
+            'preview'  => $preview,
             'viewUrl'  => base_url('student/files/' . (int) $f['material_id'] . '/view'),
             'downloadUrl' => base_url('student/files/' . (int) $f['material_id'] . '/download'),
         ];
@@ -268,67 +245,6 @@ class Student extends BaseController
         return $this->materials->findPublished($id) ?? throw PageNotFoundException::forPageNotFound('That file is not available.');
     }
 
-    /** The material's file_path if it is a web link (http/https), else null. */
-    private function externalUrl(array $file): ?string
-    {
-        $path = trim((string) $file['file_path']);
-
-        return preg_match('#^https?://#i', $path) && filter_var($path, FILTER_VALIDATE_URL) ? $path : null;
-    }
-
-    /** Resolves file_path to a real file inside writable/uploads (never outside it). */
-    private function localPathOr404(array $file): string
-    {
-        $uploads = realpath(WRITEPATH . 'uploads');
-        $stored  = str_replace('\\', '/', trim((string) $file['file_path']));
-
-        $candidates = [
-            WRITEPATH . ltrim($stored, '/'),            // e.g. "uploads/abc.pdf"
-            WRITEPATH . 'uploads/' . ltrim($stored, '/'), // e.g. "abc.pdf"
-            $stored,                                      // absolute path
-        ];
-
-        foreach ($candidates as $candidate) {
-            $real = realpath($candidate);
-            if ($uploads && $real && is_file($real) && str_starts_with($real, $uploads . DIRECTORY_SEPARATOR)) {
-                return $real;
-            }
-        }
-
-        throw PageNotFoundException::forPageNotFound('The file could not be found on the server.');
-    }
-
-    private function sendFile(array $file, string $path, bool $inline): ResponseInterface
-    {
-        $name = $file['file_name'] ?: basename($path);
-        if (pathinfo($name, PATHINFO_EXTENSION) === '' && pathinfo($path, PATHINFO_EXTENSION) !== '') {
-            $name .= '.' . pathinfo($path, PATHINFO_EXTENSION);
-        }
-
-        $response = $this->response->download($path, null)->setFileName($name);
-        if ($inline) {
-            $response->inline();
-        }
-
-        return $response->setHeader('X-Content-Type-Options', 'nosniff');
-    }
-
-    /** Lower-case extension from file_name, falling back to file_type ('pdf' or 'application/pdf'). */
-    private function extension(array $file): string
-    {
-        $ext = strtolower(pathinfo((string) $file['file_name'], PATHINFO_EXTENSION));
-        if ($ext !== '') {
-            return $ext;
-        }
-
-        $type = strtolower(trim((string) $file['file_type']));
-        if (str_contains($type, '/')) {
-            return (string) (\Config\Mimes::guessExtensionFromType($type) ?? '');
-        }
-
-        return preg_replace('/[^a-z0-9]/', '', $type);
-    }
-
     private function typeName(string $ext): string
     {
         return match ($ext) {
@@ -356,9 +272,18 @@ class Student extends BaseController
         return number_format($n) . ' ' . $word . ($n === 1 ? '' : 's');
     }
 
-    /** Folder colour for a category, cycling through the palette in student.css. */
-    private function color(int $categoryId): string
+    /**
+     * Folder colour (.c1–.c8 in student.css) for a section.
+     * The 8 landing-page sections get their landing colour by name (Config\Nexus::$sections order),
+     * whatever their category_id is; any other section cycles through the palette by id.
+     */
+    private function color(int $categoryId, string $name = ''): string
     {
-        return 'c' . ((max($categoryId, 1) - 1) % 8 + 1);
+        static $byName = null;
+        $byName ??= array_flip(array_map('strtolower', array_keys(config('Nexus')->sections)));
+
+        $index = $byName[strtolower(trim($name))] ?? (max($categoryId, 1) - 1);
+
+        return 'c' . ($index % 8 + 1);
     }
 }

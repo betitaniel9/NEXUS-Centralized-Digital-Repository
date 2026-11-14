@@ -139,3 +139,25 @@ if (! function_exists('partial')) {
         return view($name, $data, ['saveData' => false]);
     }
 }
+
+if (! function_exists('review_pill')) {
+    /**
+     * Where a committee upload is in the approval flow (submissions.submission_status → pill).
+     * Committee → Secretary → Vice President → President → Published.
+     *
+     * @return array{label: string, class: string}
+     */
+    function review_pill(string $status): array
+    {
+        return match ($status) {
+            'Published'              => ['label' => 'Published',             'class' => 'pill-soft-green'],
+            'Pending Secretary'      => ['label' => 'With Secretary',        'class' => 'pill-soft-amber'],
+            'Pending Vice President' => ['label' => 'With Vice President',   'class' => 'pill-soft-amber'],
+            'Pending President'      => ['label' => 'With President',        'class' => 'pill-soft-amber'],
+            'Approved'               => ['label' => 'Approved',              'class' => 'pill-soft-blue'],
+            'Revision Required',
+            'Rejected'               => ['label' => 'Returned',              'class' => 'pill-soft-red'],
+            default                  => ['label' => $status,                 'class' => 'pill-gray'],
+        };
+    }
+}
